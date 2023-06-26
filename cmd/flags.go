@@ -38,4 +38,8 @@ func registerGetFlags(cmd *cobra.Command) {
 		"enable the flag to display images retrieved in table format (disabled by default)")
 	cmd.PersistentFlags().BoolVarP(&images.FromRelease, "from-release", "", false,
 		"enable the flag to fetch the images from release instead (disabled by default)")
+	cmd.PersistentFlags().StringArrayVar(&images.ExtraImagesFiles, "extra-images-file", []string{},
+		"optional Helm template files to derive extra images from")
+	cmd.PersistentFlags().StringVar(&images.KubeVersion, "kube-version", "",
+		"Kubernetes version used for Capabilities.KubeVersion when rendering charts")
 }

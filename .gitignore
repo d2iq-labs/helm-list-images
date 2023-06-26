@@ -35,3 +35,8 @@ helm_images_*.yaml
 example/chart/kube-prometheus-stack
 example/chart/grafana-operator
 example/chart/strimzi
+
+# Devenv
+.devenv*
+devenv.local.nix
+.direnv

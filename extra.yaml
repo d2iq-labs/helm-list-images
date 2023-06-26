@@ -1,0 +1,4 @@
+jimmi/something:something-else
+jimmi/something2:{{.Chart.AppVersion}}
+jimmi/something3:{{.Chart.Version}}
+jimmi/something4:{{.Values.new.value}}

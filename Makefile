@@ -2,7 +2,7 @@ GOFMT_FILES?=$(shell find . -not -path "./vendor/*" -type f -name '*.go')
 APP_NAME?=helm-images
 APP_DIR?=$(shell git rev-parse --show-toplevel)
 DEV?=${DEVBOX_TRUE}
-SRC_PACKAGES=$(shell go list -mod=vendor ./... | grep -v "vendor" | grep -v "mocks")
+SRC_PACKAGES=$(shell go list ./... | grep -v "vendor" | grep -v "mocks")
 BUILD_ENVIRONMENT?=${ENVIRONMENT}
 VERSION?=0.1.0
 REVISION?=$(shell git rev-parse --verify HEAD)
@@ -29,12 +29,11 @@ local.fmt: ## Lints all the go code in the application.
 	$(GOBIN)/gofumpt -l -w $(GOFMT_FILES)
 	$(GOBIN)/gci write $(GOFMT_FILES) --skip-generated
 
-local.check: local.fmt ## Loads all the dependencies to vendor directory
-	@go mod vendor
+local.check: local.fmt
 	@go mod tidy
 
 local.build: local.check ## Generates the artifact with the help of 'go build'
-	GOVERSION=${GOVERSION} BUILD_ENVIRONMENT=${BUILD_ENVIRONMENT} goreleaser build --rm-dist
+	GOVERSION=${GOVERSION} BUILD_ENVIRONMENT=${BUILD_ENVIRONMENT} goreleaser build --snapshot --clean --single-target
 
 local.push: local.build ## Pushes built artifact to the specified location
 
@@ -42,10 +41,10 @@ local.run: local.build ## Generates the artifact and start the service in the cu
 	./${APP_NAME}
 
 publish: local.check ## Builds and publishes the app
-	GOVERSION=${GOVERSION} BUILD_ENVIRONMENT=${BUILD_ENVIRONMENT} PLUGIN_PATH=${APP_DIR} goreleaser release --rm-dist
+	GOVERSION=${GOVERSION} BUILD_ENVIRONMENT=${BUILD_ENVIRONMENT} PLUGIN_PATH=${APP_DIR} goreleaser release --clean
 
 mock.publish: local.check ## Builds and mocks app release
-	GOVERSION=${GOVERSION} BUILD_ENVIRONMENT=${BUILD_ENVIRONMENT} PLUGIN_PATH=${APP_DIR} goreleaser release --skip-publish --rm-dist
+	GOVERSION=${GOVERSION} BUILD_ENVIRONMENT=${BUILD_ENVIRONMENT} PLUGIN_PATH=${APP_DIR} goreleaser release --snapshot --clean
 
 lint: ## Lint's application for errors, it is a linters aggregator (https://github.com/golangci/golangci-lint).
 	if [ -z "${DEV}" ]; then golangci-lint run --color always ; else docker run --rm -v $(APP_DIR):/app -w /app golangci/golangci-lint:v1.46.2-alpine golangci-lint run --color always ; fi
@@ -68,4 +67,4 @@ generate.document: ## generates cli documents using 'github.com/spf13/cobra/doc'
 	@go generate github.com/nikhilsbhat/helm-images/docs
 
 test: ## runs test cases
-	@go test ./... -mod=vendor -coverprofile cover.out && go tool cover -html=cover.out -o cover.html && open cover.html
+	@go test ./... -coverprofile cover.out && go tool cover -html=cover.out -o cover.html && open cover.html

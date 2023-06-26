@@ -5,17 +5,26 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/fs"
+	"log"
 	"os"
-	"os/exec"
+	"path/filepath"
 	"regexp"
+	"strconv"
 	"strings"
 
 	imgErrors "github.com/nikhilsbhat/helm-images/pkg/errors"
 	"github.com/nikhilsbhat/helm-images/pkg/k8s"
+	"github.com/otiai10/copy"
 	monitoringV1 "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"github.com/sirupsen/logrus"
 	"github.com/thoas/go-funk"
+	"helm.sh/helm/v3/pkg/action"
+	"helm.sh/helm/v3/pkg/chart/loader"
+	"helm.sh/helm/v3/pkg/chartutil"
+	"helm.sh/helm/v3/pkg/cli"
+	"helm.sh/helm/v3/pkg/cli/values"
+	"helm.sh/helm/v3/pkg/getter"
+	"helm.sh/helm/v3/pkg/postrender"
 )
 
 const (
@@ -27,23 +36,26 @@ const (
 // Images represents GetImages.
 type Images struct {
 	// Registries are list of registry names which we have filter out from
-	Registries   []string
-	Kind         []string
-	Values       []string
-	StringValues []string
-	FileValues   []string
-	ImageRegex   string
-	ValueFiles   ValueFiles
-	LogLevel     string
-	FromRelease  bool
-	UniqueImages bool
-	JSON         bool
-	YAML         bool
-	Table        bool
-	release      string
-	chart        string
-	log          *logrus.Logger
-	writer       *bufio.Writer
+	Registries       []string
+	Kind             []string
+	Values           []string
+	StringValues     []string
+	FileValues       []string
+	ExtraImagesFiles []string
+	ImageRegex       string
+	ValueFiles       ValueFiles
+	LogLevel         string
+	FromRelease      bool
+	UniqueImages     bool
+	KubeVersion      string
+	PostRenderer     postrender.PostRenderer
+	JSON             bool
+	YAML             bool
+	Table            bool
+	release          string
+	chart            string
+	log              *logrus.Logger
+	writer           *bufio.Writer
 }
 
 func (image *Images) SetRelease(release string) {
@@ -76,13 +88,15 @@ func (image *Images) GetWriter() *bufio.Writer {
 //nolint:funlen,gocognit
 func (image *Images) GetImages() error {
 	image.log.Debug(
-		fmt.Sprintf("got all required values to fetch the images from chart/release '%s' proceeding furter to fetch the same", image.release),
+		fmt.Sprintf("got all required values to fetch the images from chart/release '%s' proceeding further to fetch the same", image.release),
 	)
 
 	chart, err := image.getChartManifests()
 	if err != nil {
 		return err
 	}
+
+	image.log.Debug(fmt.Sprintf("Rendered templates: %s", string(chart)))
 
 	images := make([]*k8s.Image, 0)
 	kubeKindTemplates := image.GetTemplates(chart)
@@ -223,53 +237,129 @@ func (image *Images) getChartManifests() ([]byte, error) {
 }
 
 func (image *Images) getChartTemplate() ([]byte, error) {
-	flags := make([]string, 0)
-
-	for _, value := range image.Values {
-		flags = append(flags, "--set", value)
-	}
-
-	for _, stringValue := range image.StringValues {
-		flags = append(flags, "--set-string", stringValue)
-	}
-
-	for _, fileValue := range image.FileValues {
-		flags = append(flags, "--set-file", fileValue)
-	}
-
-	for _, valueFile := range image.ValueFiles {
-		flags = append(flags, "--values", valueFile)
-	}
-
+	settings := cli.New()
 	if strings.ToLower(image.LogLevel) == logrus.DebugLevel.String() {
-		flags = append(flags, "--debug")
+		settings.Debug = true
 	}
 
-	args := []string{"template", image.release, image.chart}
-	args = append(args, flags...)
+	actionConfig := new(action.Configuration)
 
-	image.log.Debug(fmt.Sprintf("rendering helm chart with following commands/flags '%s'", strings.Join(args, ", ")))
+	if err := actionConfig.Init(settings.RESTClientGetter(), settings.Namespace(), os.Getenv("HELM_DRIVER"), log.Printf); err != nil {
+		image.log.Error("oops initialising helm client errored with", err)
 
-	cmd := exec.Command(os.Getenv("HELM_BIN"), args...) //nolint:gosec
-	output, err := cmd.Output()
-
-	var exitErr *exec.ExitError
-
-	if errors.As(err, &exitErr) {
-		image.log.Errorf("rendering template for release: '%s' errored with %v", image.release, err)
-
-		return nil, fmt.Errorf("%w: %s", exitErr, exitErr.Stderr)
+		return nil, err
 	}
 
-	var pathErr *fs.PathError
+	tmpDir, err := os.MkdirTemp("", ".helm-images-*")
+	if err != nil {
+		return nil, fmt.Errorf("failed to create temporary directory: %w", err)
+	}
+	defer os.RemoveAll(tmpDir)
 
-	if errors.As(err, &pathErr) {
-		image.log.Error("locating helm cli errored with", err)
+	actualChartDir := tmpDir
 
-		return nil, fmt.Errorf("%w: %s", pathErr, pathErr.Path)
+	_, err = os.Stat(image.chart)
+
+	switch {
+	case err == nil:
+		if err := copy.Copy(image.chart, actualChartDir); err != nil {
+			return nil, fmt.Errorf("failed to copy chart to temporary directory: %w", err)
+		}
+	case filepath.IsAbs(image.chart):
+		return nil, fmt.Errorf("specified chart path does not exist: %w", err)
+	default:
+		pull := action.NewPullWithOpts(action.WithConfig(actionConfig))
+		pull.Settings = settings
+		pull.Untar = true
+		pull.DestDir = tmpDir
+
+		out, err := pull.Run(image.chart)
+		if err != nil {
+			return nil, fmt.Errorf("failed to pull chart: %w (output: %s)", err, out)
+		}
+
+		actualChartDir = filepath.Join(tmpDir, filepath.Base(image.chart))
 	}
 
-	return output, nil
+	for fileIdx, extraImagesFile := range image.ExtraImagesFiles {
+		extraImagesFileReader, err := os.Open(extraImagesFile)
+		if err != nil {
+			return nil, fmt.Errorf("failed to open extra images file: %w", err)
+		}
+
+		resIdx := 0
+
+		scanner := bufio.NewScanner(extraImagesFileReader)
+		for scanner.Scan() {
+			err = os.WriteFile(
+				filepath.Join(actualChartDir, "templates", fmt.Sprintf("helm-images-extra-images-file-%d-%d.yaml", fileIdx, resIdx)),
+				[]byte(`---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: unused`+strconv.Itoa(fileIdx)+`
+spec:
+  containers:
+  - image: `+scanner.Text()),
+				0o400,
+			)
+
+			if err != nil {
+				_ = extraImagesFileReader.Close()
+
+				return nil, fmt.Errorf("failed to write extra images template: %w", err)
+			}
+			resIdx++
+		}
+
+		_ = extraImagesFileReader.Close()
+
+		if scanner.Err() != nil {
+			return nil, fmt.Errorf("failed to read extra images file: %w", err)
+		}
+	}
+
+	chrt, err := loader.LoadDir(actualChartDir)
+	if err != nil {
+		return nil, fmt.Errorf("failed to load chart: %w", err)
+	}
+
+	valueOpts := &values.Options{
+		ValueFiles:   image.FileValues,
+		StringValues: image.StringValues,
+		Values:       image.Values,
+		FileValues:   image.FileValues,
+	}
+
+	templateClient := action.NewInstall(actionConfig)
+	templateClient.DryRun = true
+	templateClient.ReleaseName = "release-name"
+	templateClient.Replace = true // Skip the name check
+	templateClient.ClientOnly = true
+	templateClient.PostRenderer = image.PostRenderer
+
+	if image.KubeVersion != "" {
+		parsedKubeVersion, err := chartutil.ParseKubeVersion(image.KubeVersion)
+		if err != nil {
+			return nil, fmt.Errorf("invalid kube version '%s': %w", image.KubeVersion, err)
+		}
+
+		templateClient.KubeVersion = parsedKubeVersion
+	}
+
+	p := getter.All(settings)
+
+	vals, err := valueOpts.MergeValues(p)
+	if err != nil {
+		return nil, fmt.Errorf("failed to merge values: %w", err)
+	}
+
+	templateOutput, err := templateClient.Run(chrt, vals)
+	if err != nil {
+		return nil, fmt.Errorf("failed to generate manifests: %w", err)
+	}
+
+	return []byte(templateOutput.Manifest), nil
 }
 
 func (image *Images) GetTemplates(template []byte) []string {
