@@ -3,7 +3,6 @@ package cmd
 import (
 	"bufio"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -16,11 +15,6 @@ import (
 )
 
 var images = pkg.Images{}
-
-const (
-	getArgumentCountLocal   = 2
-	getArgumentCountRelease = 1
-)
 
 type imagesCommands struct {
 	commands []*cobra.Command
@@ -53,22 +47,23 @@ func (c *imagesCommands) prepareCommands() *cobra.Command {
 
 func getImagesCommand() *cobra.Command {
 	imageCommand := &cobra.Command{
-		Use:   "get [RELEASE] [CHART] [flags]",
+		Use:   "get CHART|RELEASE [flags]",
 		Short: "Fetches all images those are part of specified chart/release",
 		Long:  "Lists all images those are part of specified chart/release and matches the pattern or part of specified registry.",
 		Example: `  helm images get prometheus-standalone path/to/chart/prometheus-standalone -f ~/path/to/override-config.yaml
   helm images get prometheus-standalone --from-release --registry quay.io
   helm images get prometheus-standalone --from-release --registry quay.io --unique
   helm images get prometheus-standalone --from-release --registry quay.io --yaml`,
-		Args: minimumArgError,
+		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			images.SetLogger(images.LogLevel)
 			images.SetWriter(os.Stdout)
 			cmd.SilenceUsage = true
 
-			images.SetRelease(args[0])
-			if !images.FromRelease {
-				images.SetChart(args[1])
+			if images.FromRelease {
+				images.SetRelease(args[0])
+			} else {
+				images.SetChart(args[0])
 			}
 
 			if (images.JSON && images.YAML && images.Table) || (images.JSON && images.YAML) ||
@@ -139,27 +134,6 @@ func versionConfig(cmd *cobra.Command, args []string) error {
 }
 
 //nolint:goerr113
-func minimumArgError(cmd *cobra.Command, args []string) error {
-	minArgError := errors.New("[RELEASE] or [CHART] cannot be empty")
-	oneOfThemError := errors.New("when '--from-release' is enabled, valid input is [RELEASE] and not both [RELEASE] [CHART]")
-	cmd.SilenceUsage = true
-
-	if !images.FromRelease {
-		if len(args) != getArgumentCountLocal {
-			log.Println(minArgError)
-
-			return minArgError
-		}
-
-		return nil
-	}
-
-	if len(args) > getArgumentCountRelease {
-		log.Fatalln(oneOfThemError)
-	}
-
-	return nil
-}
 
 func getUsageTemplate() string {
 	return `Usage:{{if .Runnable}}
