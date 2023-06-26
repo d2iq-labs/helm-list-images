@@ -55,21 +55,22 @@ checksum:
   name_template: '{{ .ProjectName }}_{{ .Version }}_SHA256SUMS'
   algorithm: sha256
 
-signs:
-  - artifacts: checksum
-    args:
-      - "--batch"
-      - "--local-user"
-      - "{{ .Env.GPG_FINGERPRINT }}" # set this environment variable for your signing key
-      - "--output"
-      - "${signature}"
-      - "--detach-sign"
-      - "${artifact}"
+# signs:
+#   - artifacts: checksum
+#     args:
+#       - "--batch"
+#       - "--local-user"
+#       - "{{ .Env.GPG_FINGERPRINT }}" # set this environment variable for your signing key
+#       - "--output"
+#       - "${signature}"
+#       - "--detach-sign"
+#       - "${artifact}"
 
 changelog:
-  sort: asc
+  use: github
   filters:
     exclude:
       - '^docs:'
       - '^test:'
+      - '^ci:'
 
