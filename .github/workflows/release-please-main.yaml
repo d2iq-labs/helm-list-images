@@ -1,0 +1,33 @@
+# Copyright 2021-2023 D2iQ, Inc. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
+name: release-please-main
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: google-github-actions/release-please-action@v3.7
+        id: release-please
+        with:
+          release-type: go
+          package-name: mindthegap
+          pull-request-title-pattern: "build${scope}: release${component} ${version}"
+          changelog-notes-type: github
+
+      - if: ${{ steps.release-please.outputs.release_created }}
+        name: Run release workflow
+        uses: benc-uk/workflow-dispatch@v121
+        with:
+          workflow: release-tag.yaml
+          ref: ${{ steps.release-please.outputs.tag_name }}

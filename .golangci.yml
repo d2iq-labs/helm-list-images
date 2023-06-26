@@ -40,6 +40,15 @@ linters-settings:
   dupl:
     threshold: 450
 
+  depguard:
+    rules:
+      main:
+        files:
+          - $all
+        allow:
+          - $gostd
+
+
 run:
   concurrency: 10
   timeout: 10m

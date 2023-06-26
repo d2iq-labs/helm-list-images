@@ -1,0 +1,72 @@
+# Copyright 2021-2023 D2iQ, Inc. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
+name: checks
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+    branches:
+      - main
+
+jobs:
+  unit-test:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Set up devenv.sh environment
+        uses: d2iq-labs/devenv.sh-action@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run unit tests
+        run: make test
+
+  # lint:
+  #   runs-on: ubuntu-22.04
+  #   steps:
+  #     - name: Check out code
+  #       uses: actions/checkout@v3
+
+  #     - name: Set up devenv.sh environment
+  #       uses: d2iq-labs/devenv.sh-action@v1
+  #       with:
+  #         github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  #     - name: Export golang and golangci-lint versions
+  #       run: |
+  #         echo "GOLANGCI_LINT_VERSION=v$(golangci-lint version --format short)" >>$GITHUB_ENV
+  #         echo "GO_VERSION=$(go version | grep -o "[[:digit:]]\+.[[:digit:]]\+\(.[[:digit:]]\+\)\?")" >>$GITHUB_ENV
+
+  #     - name: golangci-lint
+  #       uses: reviewdog/action-golangci-lint@v2
+  #       with:
+  #         fail_on_error: true
+  #         reporter: github-pr-review
+  #         golangci_lint_version: ${{ env.GOLANGCI_LINT_VERSION }}
+  #         go_version: ${{ env.GO_VERSION }}
+
+  # pre-commit:
+  #   runs-on: ubuntu-22.04
+  #   steps:
+  #     - name: Check out code
+  #       uses: actions/checkout@v3
+
+  #     - name: Set up devenv.sh environment
+  #       uses: d2iq-labs/devenv.sh-action@v1
+  #       with:
+  #         github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  #     - uses: pre-commit/action@v3.0.0
+  #       with:
+  #         extra_args: --all-files --show-diff-on-failure
+  #       env:
+  #         SKIP: no-commit-to-branch,golangci-lint
