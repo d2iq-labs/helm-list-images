@@ -325,7 +325,7 @@ spec:
 	}
 
 	valueOpts := &values.Options{
-		ValueFiles:   image.FileValues,
+		ValueFiles:   image.ValueFiles,
 		StringValues: image.StringValues,
 		Values:       image.Values,
 		FileValues:   image.FileValues,
