@@ -38,7 +38,7 @@ quay.io/prometheus/alertmanager:v0.21.0
 ## Installation
 
 ```shell
-helm plugin install https://github.com/nikhilsbhat/helm-images
+helm plugin install https://github.com/d2iq-labs/helm-images
 ```
 Use the executable just like any other go-cli application.
 
