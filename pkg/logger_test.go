@@ -3,7 +3,7 @@ package pkg_test
 import (
 	"testing"
 
-	"github.com/nikhilsbhat/helm-images/pkg"
+	"github.com/d2iq-labs/helm-list-images/pkg"
 	log "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 )

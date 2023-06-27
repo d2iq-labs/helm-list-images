@@ -12,12 +12,12 @@ builds:
       - -trimpath
     ldflags:
       - -s -w
-        -X github.com/nikhilsbhat/helm-images/version.Version={{.Version}}
-        -X github.com/nikhilsbhat/helm-images/version.Env={{.Env.BUILD_ENVIRONMENT}}
-        -X github.com/nikhilsbhat/helm-images/version.BuildDate={{.Date}}
-        -X github.com/nikhilsbhat/helm-images/version.Revision={{.Commit}}
-        -X github.com/nikhilsbhat/helm-images/version.GoVersion={{.Env.GOVERSION}}
-        -X github.com/nikhilsbhat/helm-images/version.Platform={{ .Runtime.Goos }}/{{ .Runtime.Goarch }}
+        -X github.com/d2iq-labs/helm-list-images/version.Version={{.Version}}
+        -X github.com/d2iq-labs/helm-list-images/version.Env={{.Env.BUILD_ENVIRONMENT}}
+        -X github.com/d2iq-labs/helm-list-images/version.BuildDate={{.Date}}
+        -X github.com/d2iq-labs/helm-list-images/version.Revision={{.Commit}}
+        -X github.com/d2iq-labs/helm-list-images/version.GoVersion={{.Env.GOVERSION}}
+        -X github.com/d2iq-labs/helm-list-images/version.Platform={{ .Runtime.Goos }}/{{ .Runtime.Goarch }}
     goos:
       - linux
       - darwin

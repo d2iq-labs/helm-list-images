@@ -1,108 +1,55 @@
-#! /bin/bash -e
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
 
-function verlte() {
-  [ "$1" = "$(echo -e "$1\n$2" | sort -V | head -n1)" ]
+trap_add() {
+  local -r sig="${2:?Signal required}"
+  local -r hdls="$(trap -p "${sig}" | cut -f2 -d \')"
+  # shellcheck disable=SC2064 # Quotes are required here to properly expand when adding the new trap.
+  trap "${hdls}${hdls:+;}${1:?Handler required}" "${sig}"
 }
 
-function verlt() {
-  [ "$1" = "$2" ] && return 1 || verlte $1 $2
-}
+OS_NAME="$(uname -s)"
+readonly OS_NAME
+OS_ARCH="$(uname -m)"
+readonly OS_ARCH
 
-function isOld() {
-  verlte $1 $2 && echo "yes" || echo "no"
-}
+declare -r PLUGIN_NAME="helm-list-images"
+VERSION="$(grep VERSION "${HELM_PLUGIN_DIR}/plugin.yaml" | cut -d'"' -f2)"
+readonly VERSION
+declare -r DOWNLOAD_URL="https://github.com/d2iq-labs/${PLUGIN_NAME}/releases/download/v${VERSION}/${PLUGIN_NAME}_${VERSION}_${OS_NAME}_${OS_ARCH}.tar.gz"
 
-function exit_trap() {
-  result=$?
-  if [ "$result" != "0" ]; then
-    printf "Failed to install helm images\n"
-  fi
-  exit $result
-}
+echo -e "download url set to ${DOWNLOAD_URL}\n"
+echo -e "artifact name with path ${OUTPUT_BASENAME_WITH_POSTFIX}\n"
+echo -e "downloading ${DOWNLOAD_URL} to ${HELM_PLUGIN_DIR}\n"
 
-function download_plugin() {
-  osName=$(uname -s)
-  osArch=$(uname -m)
+if [ -z "${DOWNLOAD_URL}" ]; then
+  echo -e "Unsupported OS / architecture: ${OS_NAME}/${OS_ARCH}\n"
+  exit 1
+fi
 
-  OUTPUT_BASENAME=helm-images
-  version=$(grep version "$HELM_PLUGIN_DIR/plugin.yaml" | cut -d'"' -f2)
-  old=$(isOld "$version" "0.0.5")
-  if [ "$old" == "yes" ]; then
-    DOWNLOAD_URL="https://github.com/d2iq-labs/helm-images/releases/download/v$version/helm-images_${version}_${osName}_${osArch}.zip"
-    OUTPUT_BASENAME_WITH_POSTFIX="$HELM_PLUGIN_DIR/$OUTPUT_BASENAME.zip"
+HELM_PLUGIN_TEMP_PATH="$(mktemp -d -p "${TMPDIR:-/tmp}" "${PLUGIN_NAME}_XXXXXXX")"
+readonly HELM_PLUGIN_TEMP_PATH
+trap_add "rm -rf \"${HELM_PLUGIN_TEMP_PATH}\"" EXIT
+
+if command -v curl &>/dev/null; then
+  if curl -fsSL "${DOWNLOAD_URL}" | tar xz -C "${HELM_PLUGIN_TEMP_PATH}"; then
+    echo -e "successfully downloaded and extracted the plugin archive\n"
   else
-    DOWNLOAD_URL="https://github.com/d2iq-labs/helm-images/releases/download/v$version/helm-images_${version}_${osName}_${osArch}.tar.gz"
-    OUTPUT_BASENAME_WITH_POSTFIX="$HELM_PLUGIN_DIR/$OUTPUT_BASENAME.tar.gz"
-  fi
-
-  echo -e "download url set to ${DOWNLOAD_URL}\n"
-  echo -e "artifact name with path ${OUTPUT_BASENAME_WITH_POSTFIX}\n"
-  echo -e "downloading ${DOWNLOAD_URL} to ${HELM_PLUGIN_DIR}\n"
-
-  if [ -z "${DOWNLOAD_URL}" ]; then
-    echo -e "Unsupported OS / architecture: ${osName}/${osArch}\n"
+    echo -e "failed while downloading helm archive\n"
     exit 1
   fi
+else
+  echo "Need curl"
+  exit 1
+fi
 
-  if [[ -n $(command -v curl) ]]; then
-    if curl --fail -L "${DOWNLOAD_URL}" -o "${OUTPUT_BASENAME_WITH_POSTFIX}"; then
-      echo -e "successfully download the archive proceeding to install\n"
-    else
-      echo -e "failed while downloading helm archive\n"
-      exit 1
-    fi
-  else
-    echo "Need curl"
-    exit -1
-  fi
+mkdir -p "${HELM_PLUGIN_DIR}/bin"
+mv "${HELM_PLUGIN_TEMP_PATH}/${PLUGIN_NAME}" "${HELM_PLUGIN_DIR}/bin/${PLUGIN_NAME}"
 
-}
-
-function install_plugin() {
-  local HELM_PLUGIN_ARTIFACT_PATH=${OUTPUT_BASENAME_WITH_POSTFIX}
-  local PROJECT_NAME="helm-images"
-  local HELM_PLUGIN_TEMP_PATH="/tmp/$PROJECT_NAME"
-
-  echo -n "HELM_PLUGIN_ARTIFACT_PATH: ${HELM_PLUGIN_ARTIFACT_PATH}"
-  rm -rf "${HELM_PLUGIN_TEMP_PATH}"
-
-  echo -e "Preparing to install into ${HELM_PLUGIN_DIR}\n"
-  mkdir -p "${HELM_PLUGIN_TEMP_PATH}"
-  tar -xvf "${HELM_PLUGIN_ARTIFACT_PATH}" -C "${HELM_PLUGIN_TEMP_PATH}"
-  mkdir -p "$HELM_PLUGIN_DIR/bin"
-  mv "${HELM_PLUGIN_TEMP_PATH}"/helm-images "${HELM_PLUGIN_DIR}/bin/helm-images"
-  rm -rf "${HELM_PLUGIN_TEMP_PATH}"
-  rm -rf "${HELM_PLUGIN_ARTIFACT_PATH}"
-}
-
-function install() {
-  echo "Installing helm-images..."
-
-  download_plugin
-  status=$?
-  if [ $status -ne 0 ]; then
-    echo -e "downloading plugin failed\n"
-    exit 1
-  fi
-
-  set +e
-  install_plugin
-  local INSTALL_PLUGIN_STAT=$?
-  set -e
-
-  if [ "$INSTALL_PLUGIN_STAT" != "0" ]; then
-    echo "installing helm plugin helm-images failed with error code: ${INSTALL_PLUGIN_STAT}"
-    exit 1
-  fi
-
-  echo
-  echo "helm-images is installed."
-  echo
-  "${HELM_PLUGIN_DIR}"/bin/helm-images -h
-  echo
-  echo "See https://github.com/d2iq-labs/helm-images#readme for more information on getting started."
-}
-
-trap "exit_trap" EXIT
-
-install "$@"
+echo
+echo "${PLUGIN_NAME} is installed."
+echo
+"${HELM_PLUGIN_DIR}/bin/${PLUGIN_NAME}" -h
+echo
+echo "See https://github.com/d2iq-labs/${PLUGIN_NAME}#readme for more information on getting started."

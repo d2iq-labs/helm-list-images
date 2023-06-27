@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/nikhilsbhat/helm-images/pkg/k8s"
+	"github.com/d2iq-labs/helm-list-images/pkg/k8s"
 )
 
 func (image *Images) FilterImagesByRegistries(images []*k8s.Image) []*k8s.Image {

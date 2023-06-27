@@ -8,9 +8,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/nikhilsbhat/helm-images/pkg"
-	imgErrors "github.com/nikhilsbhat/helm-images/pkg/errors"
-	"github.com/nikhilsbhat/helm-images/version"
+	"github.com/d2iq-labs/helm-list-images/pkg"
+	imgErrors "github.com/d2iq-labs/helm-list-images/pkg/errors"
+	"github.com/d2iq-labs/helm-list-images/version"
 	"github.com/spf13/cobra"
 )
 

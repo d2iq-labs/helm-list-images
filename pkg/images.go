@@ -12,8 +12,8 @@ import (
 	"strconv"
 	"strings"
 
-	imgErrors "github.com/nikhilsbhat/helm-images/pkg/errors"
-	"github.com/nikhilsbhat/helm-images/pkg/k8s"
+	imgErrors "github.com/d2iq-labs/helm-list-images/pkg/errors"
+	"github.com/d2iq-labs/helm-list-images/pkg/k8s"
 	"github.com/otiai10/copy"
 	monitoringV1 "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"github.com/sirupsen/logrus"

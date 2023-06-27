@@ -12,8 +12,8 @@
 vendor/
 
 # dropping local built binaries
-helm-images
-helm-images*
+helm-list-images
+helm-list-images*
 
 # dropping the templates
 templates-latest/

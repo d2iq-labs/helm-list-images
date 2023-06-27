@@ -1,4 +1,4 @@
-module github.com/nikhilsbhat/helm-images
+module github.com/d2iq-labs/helm-list-images
 
 go 1.19
 

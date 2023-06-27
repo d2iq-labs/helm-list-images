@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	thanosAlphaV1 "github.com/banzaicloud/thanos-operator/pkg/sdk/api/v1alpha1"
+	imgErrors "github.com/d2iq-labs/helm-list-images/pkg/errors"
 	"github.com/ghodss/yaml"
 	grafanaBetaV1 "github.com/grafana-operator/grafana-operator/api/v1beta1"
-	imgErrors "github.com/nikhilsbhat/helm-images/pkg/errors"
 	monitoringV1 "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	appsV1 "k8s.io/api/apps/v1"
 	batchV1 "k8s.io/api/batch/v1"

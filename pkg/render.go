@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"github.com/cheynewallace/tabby"
+	"github.com/d2iq-labs/helm-list-images/pkg/k8s"
 	"github.com/ghodss/yaml"
-	"github.com/nikhilsbhat/helm-images/pkg/k8s"
 )
 
 func (image *Images) render(images []*k8s.Image) error {
