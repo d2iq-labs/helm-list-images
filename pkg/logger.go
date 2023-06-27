@@ -9,7 +9,7 @@ import (
 func (image *Images) SetLogger(logLevel string) {
 	logger := log.New()
 	logger.SetLevel(GetLoglevel(logLevel))
-	logger.WithField("helm-images", true)
+	logger.WithField("helm-list-images", true)
 	logger.SetFormatter(&log.JSONFormatter{})
 	image.log = logger
 }

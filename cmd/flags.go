@@ -25,7 +25,7 @@ func registerGetFlags(cmd *cobra.Command) {
 	cmd.PersistentFlags().StringSliceVarP(&images.Kind, "kind", "k", k8s.SupportedKinds(),
 		"kubernetes app kind to fetch the images from")
 	cmd.PersistentFlags().StringVarP(&images.LogLevel, "log-level", "l", "info",
-		"log level for the plugin helm images (defaults to info)")
+		"log level for the plugin helm list-images (defaults to info)")
 	cmd.PersistentFlags().StringVarP(&images.ImageRegex, "image-regex", "", pkg.ImageRegex,
 		"regex used to split helm template rendered")
 	cmd.PersistentFlags().BoolVarP(&images.UniqueImages, "unique", "u", false,

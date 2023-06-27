@@ -9,7 +9,7 @@ import (
 
 //go:generate go run github.com/d2iq-labs/helm-list-images/docs
 func main() {
-	commands := cmd.SetImagesCommands()
+	commands := cmd.SetListImagesCommands()
 
 	if err := doc.GenMarkdownTree(commands, "doc"); err != nil {
 		log.Fatal(err)

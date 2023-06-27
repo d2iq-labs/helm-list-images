@@ -1,4 +1,4 @@
-name: images
+name: list-images
 flags:
   - set
   - set-file

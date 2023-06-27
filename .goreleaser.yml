@@ -1,10 +1,3 @@
-# This is an example .goreleaser.yml file with some sane defaults.
-# Make sure to check the documentation at http://goreleaser.com
-before:
-  hooks:
-    # You may remove this if you don't use go modules.
-    - go mod tidy
-
 builds:
   - env:
       - CGO_ENABLED=0
@@ -12,12 +5,10 @@ builds:
       - -trimpath
     ldflags:
       - -s -w
-        -X github.com/d2iq-labs/helm-list-images/version.Version={{.Version}}
-        -X github.com/d2iq-labs/helm-list-images/version.Env={{.Env.BUILD_ENVIRONMENT}}
-        -X github.com/d2iq-labs/helm-list-images/version.BuildDate={{.Date}}
-        -X github.com/d2iq-labs/helm-list-images/version.Revision={{.Commit}}
-        -X github.com/d2iq-labs/helm-list-images/version.GoVersion={{.Env.GOVERSION}}
-        -X github.com/d2iq-labs/helm-list-images/version.Platform={{ .Runtime.Goos }}/{{ .Runtime.Goarch }}
+      - -X github.com/d2iq-labs/helm-list-images/version.Version={{.Version}}
+      - -X github.com/d2iq-labs/helm-list-images/version.BuildDate={{.Date}}
+      - -X github.com/d2iq-labs/helm-list-images/version.Revision={{.Commit}}
+      - -X github.com/d2iq-labs/helm-list-images/version.Platform={{ .Runtime.Goos }}/{{ .Runtime.Goarch }}
     goos:
       - linux
       - darwin

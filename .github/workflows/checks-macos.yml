@@ -32,4 +32,4 @@ jobs:
 
       - name: Run binary
         run: |
-          ./dist/helm-images_darwin_amd64_v1/helm-images
+          ./dist/helm-list-images_darwin_amd64_v1/helm-list-images -h

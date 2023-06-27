@@ -108,7 +108,7 @@ func (image *Images) GetImages() error {
 		}
 
 		if !funk.Contains(image.Kind, currentKind) {
-			image.log.Debugf("either helm-images plugin does not support kind '%s' "+
+			image.log.Debugf("either helm-list-images plugin does not support kind '%s' "+
 				"at the moment or manifest might not have images to filter", currentKind,
 			)
 
@@ -251,7 +251,7 @@ func (image *Images) getChartTemplate() ([]byte, error) {
 		return nil, err
 	}
 
-	tmpDir, err := os.MkdirTemp("", ".helm-images-*")
+	tmpDir, err := os.MkdirTemp("", ".helm-list-images-*")
 	if err != nil {
 		return nil, fmt.Errorf("failed to create temporary directory: %w", err)
 	}
@@ -293,7 +293,7 @@ func (image *Images) getChartTemplate() ([]byte, error) {
 		scanner := bufio.NewScanner(extraImagesFileReader)
 		for scanner.Scan() {
 			err = os.WriteFile(
-				filepath.Join(actualChartDir, "templates", fmt.Sprintf("helm-images-extra-images-file-%d-%d.yaml", fileIdx, resIdx)),
+				filepath.Join(actualChartDir, "templates", fmt.Sprintf("helm-list-images-extra-images-file-%d-%d.yaml", fileIdx, resIdx)),
 				[]byte(`---
 apiVersion: v1
 kind: Pod
