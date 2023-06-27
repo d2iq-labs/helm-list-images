@@ -22,9 +22,12 @@ func GetRootCommand() *cobra.Command {
   helm list-images prometheus-standalone --from-release --registry quay.io
   helm list-images prometheus-standalone --from-release --registry quay.io --unique
   helm list-images prometheus-standalone --from-release --registry quay.io --yaml`,
-		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			verflag.PrintAndExitIfRequested()
+
+			if err := cobra.ExactArgs(1)(cmd, args); err != nil {
+				return err
+			}
 
 			images.SetLogger(images.LogLevel)
 			images.SetWriter(os.Stdout)
