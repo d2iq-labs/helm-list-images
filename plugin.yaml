@@ -1,5 +1,5 @@
 name: "list-images"
-version: "0.4.0"
+version: "0.5.0"
 usage: "Lists all/selected docker images that are part of deployment"
 description: "Lists all/selected docker images that would be part of deployment of selected chart"
 useTunnel: true
