@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.0 (2023-06-27)
+
+<!-- Release notes generated using configuration in .github/release.yaml at main -->
+
+
+
+**Full Changelog**: https://github.com/d2iq-labs/helm-list-images/compare/v0.4.0...v0.5.0
+
 ## 0.4.0 (2023-06-27)
 
 <!-- Release notes generated using configuration in .github/release.yaml at main -->
