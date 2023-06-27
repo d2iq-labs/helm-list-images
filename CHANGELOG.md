@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.5.1 (2023-06-27)
+
+<!-- Release notes generated using configuration in .github/release.yaml at main -->
+
+## What's Changed
+### Fixes 🔧
+* fix: Format example usage correctly by @jimmidyson in https://github.com/d2iq-labs/helm-list-images/pull/10
+* fix: Correctly handle version flag by @jimmidyson in https://github.com/d2iq-labs/helm-list-images/pull/11
+
+
+**Full Changelog**: https://github.com/d2iq-labs/helm-list-images/compare/v0.5.0...v0.5.1
+
 ## 0.5.0 (2023-06-27)
 
 <!-- Release notes generated using configuration in .github/release.yaml at main -->
