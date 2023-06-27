@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.6.0 (2023-06-27)
+
+<!-- Release notes generated using configuration in .github/release.yaml at main -->
+
+## What's Changed
+### Exciting New Features 🎉
+* feat: Add chart version flag by @jimmidyson in https://github.com/d2iq-labs/helm-list-images/pull/13
+* feat: Default kube version to 1.26.0 by @jimmidyson in https://github.com/d2iq-labs/helm-list-images/pull/14
+
+
+**Full Changelog**: https://github.com/d2iq-labs/helm-list-images/compare/v0.5.1...v0.6.0
+
 ## 0.5.1 (2023-06-27)
 
 <!-- Release notes generated using configuration in .github/release.yaml at main -->
