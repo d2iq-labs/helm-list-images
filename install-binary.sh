@@ -15,7 +15,7 @@ OS_ARCH="$(uname -m)"
 readonly OS_ARCH
 
 declare -r PLUGIN_NAME="helm-list-images"
-VERSION="$(grep version "${HELM_PLUGIN_DIR}/plugin.yaml" | cut -d'"' -f2)"
+VERSION="$(grep version "${HELM_PLUGIN_DIR}/plugin.yaml" | cut -d':' -f2 | tr -d '[:space:]')"
 readonly VERSION
 declare -r DOWNLOAD_URL="https://github.com/d2iq-labs/${PLUGIN_NAME}/releases/download/v${VERSION}/${PLUGIN_NAME}_${VERSION}_${OS_NAME}_${OS_ARCH}.tar.gz"
 
