@@ -1,9 +1,8 @@
-name: "list-images"
-version: "0.5.0"
-usage: "Lists all/selected docker images that are part of deployment"
-description: "Lists all/selected docker images that would be part of deployment of selected chart"
-useTunnel: true
-command: "$HELM_PLUGIN_DIR/bin/helm-list-images"
+command: $HELM_PLUGIN_DIR/bin/helm-list-images
+description: Lists all/selected docker images that would be part of deployment of selected chart
 hooks:
-  install: "$HELM_PLUGIN_DIR/install-binary.sh"
-  update: "$HELM_PLUGIN_DIR/install-binary.sh"
+  install: $HELM_PLUGIN_DIR/install-binary.sh
+  update: $HELM_PLUGIN_DIR/install-binary.sh
+name: list-images
+usage: Lists all/selected docker images that are part of deployment
+version: 0.5.1
