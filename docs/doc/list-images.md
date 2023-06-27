@@ -22,6 +22,7 @@ list-images CHART|RELEASE [flags]
 ### Options
 
 ```
+      --chart-version string            specify a version constraint for the chart version to use. This constraint can be a specific tag (e.g. 1.1.1) or it may reference a valid range (e.g. ^2.0.0). If this is not specified, the latest version is used
       --extra-images-file stringArray   optional Helm template files to derive extra images from
       --from-release                    enable the flag to fetch the images from release instead (disabled by default)
   -h, --help                            help for list-images
