@@ -14,9 +14,9 @@ list-images CHART|RELEASE [flags]
 
 ```
   helm list-images path/to/chart/prometheus-standalone -f ~/path/to/override-config.yaml
-			helm list-images prometheus-standalone --from-release --registry quay.io
-			helm list-images prometheus-standalone --from-release --registry quay.io --unique
-			helm list-images prometheus-standalone --from-release --registry quay.io --yaml
+  helm list-images prometheus-standalone --from-release --registry quay.io
+  helm list-images prometheus-standalone --from-release --registry quay.io --unique
+  helm list-images prometheus-standalone --from-release --registry quay.io --yaml
 ```
 
 ### Options
