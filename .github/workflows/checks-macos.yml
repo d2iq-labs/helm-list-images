@@ -28,7 +28,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build
-        run: make local.build
+        run: make build-snapshot
 
       - name: Run binary
         run: |
