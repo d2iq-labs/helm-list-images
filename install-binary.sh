@@ -27,7 +27,7 @@ fi
 echo -e "download url set to ${DOWNLOAD_URL}\n"
 echo -e "downloading and unpacking ${DOWNLOAD_URL} to ${HELM_PLUGIN_DIR}\n"
 
-HELM_PLUGIN_TEMP_PATH="$(mktemp -d -p "${TMPDIR:-/tmp}" "${PLUGIN_NAME}_XXXXXXX")"
+HELM_PLUGIN_TEMP_PATH="$(mktemp -d -t ".${PLUGIN_NAME}_XXXXXXX")"
 readonly HELM_PLUGIN_TEMP_PATH
 trap_add "rm -rf \"${HELM_PLUGIN_TEMP_PATH}\"" EXIT
 
