@@ -29,7 +29,7 @@ list-images CHART|RELEASE [flags]
       --image-regex string              regex used to split helm template rendered (default "---\\n# Source:\\s.*.")
   -j, --json                            enable the flag to display images retrieved in json format (disabled by default)
   -k, --kind strings                    kubernetes app kind to fetch the images from (default [Deployment,StatefulSet,DaemonSet,CronJob,Job,ReplicaSet,Pod,Alertmanager,Prometheus,ThanosRuler,Grafana,Thanos,Receiver])
-      --kube-version string             Kubernetes version used for Capabilities.KubeVersion when rendering charts
+      --kube-version string             Kubernetes version used for Capabilities.KubeVersion when rendering charts (default "1.26.0")
   -l, --log-level string                log level for the plugin helm list-images (defaults to info) (default "info")
   -r, --registry strings                registry name (docker images belonging to this registry)
       --set stringArray                 set values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2)
