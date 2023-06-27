@@ -15,18 +15,17 @@ OS_ARCH="$(uname -m)"
 readonly OS_ARCH
 
 declare -r PLUGIN_NAME="helm-list-images"
-VERSION="$(grep VERSION "${HELM_PLUGIN_DIR}/plugin.yaml" | cut -d'"' -f2)"
+VERSION="$(grep version "${HELM_PLUGIN_DIR}/plugin.yaml" | cut -d'"' -f2)"
 readonly VERSION
 declare -r DOWNLOAD_URL="https://github.com/d2iq-labs/${PLUGIN_NAME}/releases/download/v${VERSION}/${PLUGIN_NAME}_${VERSION}_${OS_NAME}_${OS_ARCH}.tar.gz"
-
-echo -e "download url set to ${DOWNLOAD_URL}\n"
-echo -e "artifact name with path ${OUTPUT_BASENAME_WITH_POSTFIX}\n"
-echo -e "downloading ${DOWNLOAD_URL} to ${HELM_PLUGIN_DIR}\n"
 
 if [ -z "${DOWNLOAD_URL}" ]; then
   echo -e "Unsupported OS / architecture: ${OS_NAME}/${OS_ARCH}\n"
   exit 1
 fi
+
+echo -e "download url set to ${DOWNLOAD_URL}\n"
+echo -e "downloading and unpacking ${DOWNLOAD_URL} to ${HELM_PLUGIN_DIR}\n"
 
 HELM_PLUGIN_TEMP_PATH="$(mktemp -d -p "${TMPDIR:-/tmp}" "${PLUGIN_NAME}_XXXXXXX")"
 readonly HELM_PLUGIN_TEMP_PATH
