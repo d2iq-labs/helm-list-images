@@ -6,12 +6,12 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strings"
+
+	"github.com/spf13/cobra"
 
 	"github.com/d2iq-labs/helm-list-images/pkg"
 	imgErrors "github.com/d2iq-labs/helm-list-images/pkg/errors"
 	"github.com/d2iq-labs/helm-list-images/version"
-	"github.com/spf13/cobra"
 )
 
 var images = pkg.Images{}
@@ -20,7 +20,8 @@ type imagesCommands struct {
 	commands []*cobra.Command
 }
 
-// SetListImagesCommands helps in gathering all the subcommands so that it can be used while registering it with main command.
+// SetListImagesCommands helps in gathering all the subcommands so that it can be used while registering it with main
+// command.
 func SetListImagesCommands() *cobra.Command {
 	return getListImagesCommands()
 }
@@ -28,8 +29,7 @@ func SetListImagesCommands() *cobra.Command {
 // Add an entry in below function to register new command.
 func getListImagesCommands() *cobra.Command {
 	command := new(imagesCommands)
-	command.commands = append(command.commands, getImagesCommand())
-	command.commands = append(command.commands, getVersionCommand())
+	command.commands = append(command.commands, getImagesCommand(), getVersionCommand())
 
 	return command.prepareCommands()
 }
@@ -49,8 +49,9 @@ func getImagesCommand() *cobra.Command {
 	imageCommand := &cobra.Command{
 		Use:   "get CHART|RELEASE [flags]",
 		Short: "Fetches all images those are part of specified chart/release",
-		Long:  "Lists all images those are part of specified chart/release and matches the pattern or part of specified registry.",
-		Example: `  helm list-images get prometheus-standalone path/to/chart/prometheus-standalone -f ~/path/to/override-config.yaml
+		Long: "Lists all images those are part of specified chart/release and matches the pattern or part of specified " +
+			"registry.",
+		Example: `  helm list-images get path/to/chart/prometheus-standalone -f ~/path/to/override-config.yaml
   helm list-images get prometheus-standalone --from-release --registry quay.io
   helm list-images get prometheus-standalone --from-release --registry quay.io --unique
   helm list-images get prometheus-standalone --from-release --registry quay.io --yaml`,
@@ -106,15 +107,12 @@ func getVersionCommand() *cobra.Command {
 }
 
 func versionConfig(_ *cobra.Command, _ []string) error {
-	buildInfo, err := json.Marshal(version.GetBuildInfo())
-	if err != nil {
-		log.Fatalf("fetching version of helm-list-images failed with: %v", err)
-	}
+	buildInfo, _ := json.Marshal(version.GetBuildInfo())
 
 	writer := bufio.NewWriter(os.Stdout)
-	versionInfo := fmt.Sprintf("%s \n", strings.Join([]string{"images version", string(buildInfo)}, ": "))
+	versionInfo := fmt.Sprintf("%s \n", "images version"+": "+string(buildInfo))
 
-	_, err = writer.Write([]byte(versionInfo))
+	_, err := writer.WriteString(versionInfo)
 	if err != nil {
 		log.Fatalln(err)
 	}

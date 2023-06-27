@@ -3,8 +3,9 @@ package pkg_test
 import (
 	"testing"
 
-	"github.com/d2iq-labs/helm-list-images/pkg"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/d2iq-labs/helm-list-images/pkg"
 )
 
 func Test_getUniqEntries(t *testing.T) {

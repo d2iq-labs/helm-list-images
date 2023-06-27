@@ -3,9 +3,10 @@ package pkg_test
 import (
 	"testing"
 
-	"github.com/d2iq-labs/helm-list-images/pkg"
 	log "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/d2iq-labs/helm-list-images/pkg"
 )
 
 func TestGetLoglevel(t *testing.T) {

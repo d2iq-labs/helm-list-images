@@ -7,8 +7,9 @@ import (
 	"strings"
 
 	"github.com/cheynewallace/tabby"
-	"github.com/d2iq-labs/helm-list-images/pkg/k8s"
 	"github.com/ghodss/yaml"
+
+	"github.com/d2iq-labs/helm-list-images/pkg/k8s"
 )
 
 func (image *Images) render(images []*k8s.Image) error {
@@ -36,7 +37,7 @@ func (image *Images) render(images []*k8s.Image) error {
 		imags = GetUniqEntries(imags)
 	}
 
-	if _, err := image.writer.Write([]byte(fmt.Sprintf("%s\n", strings.Join(imags, "\n")))); err != nil {
+	if _, err := fmt.Fprintf(image.writer, "%s\n", strings.Join(imags, "\n")); err != nil {
 		image.log.Fatalln(err)
 	}
 
@@ -71,9 +72,9 @@ func (image *Images) ToYAML(imagesFiltered []*k8s.Image) error {
 		return err
 	}
 
-	yamlString := strings.Join([]string{"---", string(kindYAML)}, "\n")
+	yamlString := "---" + "\n" + string(kindYAML)
 
-	if _, err = image.writer.Write([]byte(yamlString)); err != nil {
+	if _, err = image.writer.WriteString(yamlString); err != nil {
 		image.log.Fatalln(err)
 	}
 
@@ -90,17 +91,14 @@ func (image *Images) ToYAML(imagesFiltered []*k8s.Image) error {
 func (image *Images) ToJSON(imagesFiltered []*k8s.Image) error {
 	image.log.Debug("rendering the images in json format since --json is enabled")
 
-	kindJSON, err := json.MarshalIndent(imagesFiltered, " ", " ")
-	if err != nil {
-		return err
-	}
+	kindJSON, _ := json.MarshalIndent(imagesFiltered, " ", " ")
 
-	if _, err = image.writer.Write(kindJSON); err != nil {
+	if _, err := image.writer.Write(kindJSON); err != nil {
 		image.log.Fatalln(err)
 	}
 
 	defer func(writer *bufio.Writer) {
-		err = writer.Flush()
+		err := writer.Flush()
 		if err != nil {
 			image.log.Fatalln(err)
 		}

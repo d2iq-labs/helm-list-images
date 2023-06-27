@@ -3,14 +3,15 @@ package k8s
 import (
 	"fmt"
 
-	thanosAlphaV1 "github.com/banzaicloud/thanos-operator/pkg/sdk/api/v1alpha1"
-	imgErrors "github.com/d2iq-labs/helm-list-images/pkg/errors"
+	thanosalphav1 "github.com/banzaicloud/thanos-operator/pkg/sdk/api/v1alpha1"
 	"github.com/ghodss/yaml"
-	grafanaBetaV1 "github.com/grafana-operator/grafana-operator/api/v1beta1"
-	monitoringV1 "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
-	appsV1 "k8s.io/api/apps/v1"
-	batchV1 "k8s.io/api/batch/v1"
-	coreV1 "k8s.io/api/core/v1"
+	grafanabetav1 "github.com/grafana-operator/grafana-operator/api/v1beta1"
+	monitoringv1 "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
+	appsv1 "k8s.io/api/apps/v1"
+	batchv1 "k8s.io/api/batch/v1"
+	corev1 "k8s.io/api/core/v1"
+
+	imgErrors "github.com/d2iq-labs/helm-list-images/pkg/errors"
 )
 
 const (
@@ -28,23 +29,23 @@ const (
 )
 
 type (
-	Deployments  appsV1.Deployment
-	StatefulSets appsV1.StatefulSet
-	DaemonSets   appsV1.DaemonSet
-	ReplicaSets  appsV1.ReplicaSet
-	CronJob      batchV1.CronJob
-	Job          batchV1.Job
-	Pod          coreV1.Pod
+	Deployments  appsv1.Deployment
+	StatefulSets appsv1.StatefulSet
+	DaemonSets   appsv1.DaemonSet
+	ReplicaSets  appsv1.ReplicaSet
+	CronJob      batchv1.CronJob
+	Job          batchv1.Job
+	Pod          corev1.Pod
 	Kind         map[string]interface{}
 	containers   struct {
-		containers []coreV1.Container
+		containers []corev1.Container
 	}
-	AlertManager   monitoringV1.Alertmanager
-	Prometheus     monitoringV1.Prometheus
-	ThanosRuler    monitoringV1.ThanosRuler
-	Grafana        grafanaBetaV1.Grafana
-	Thanos         thanosAlphaV1.Thanos
-	ThanosReceiver thanosAlphaV1.Receiver
+	AlertManager   monitoringv1.Alertmanager
+	Prometheus     monitoringv1.Prometheus
+	ThanosRuler    monitoringv1.ThanosRuler
+	Grafana        grafanabetav1.Grafana
+	Thanos         thanosalphav1.Thanos
+	ThanosReceiver thanosalphav1.Receiver
 )
 
 type KindInterface interface {
@@ -71,7 +72,9 @@ func (kin *Kind) Get(dataMap string) (string, error) {
 	if len(kindYaml) != 0 {
 		value, ok := kindYaml[kubeKind].(string)
 		if !ok {
-			return "", &imgErrors.ImageError{Message: "failed to get name from the manifest, 'kind' is not type string"}
+			return "", &imgErrors.ImageError{
+				Message: "failed to get name from the manifest, 'kind' is not type string",
+			}
 		}
 
 		return value, nil
@@ -85,7 +88,9 @@ func (dep *Deployments) Get(dataMap string) (*Image, error) {
 		return nil, err
 	}
 
-	depContainers := containers{append(dep.Spec.Template.Spec.Containers, dep.Spec.Template.Spec.InitContainers...)}
+	depContainers := containers{
+		append(dep.Spec.Template.Spec.Containers, dep.Spec.Template.Spec.InitContainers...),
+	}
 
 	images := &Image{
 		Kind:  KindDeployment,
@@ -101,7 +106,9 @@ func (dep *StatefulSets) Get(dataMap string) (*Image, error) {
 		return nil, err
 	}
 
-	depContainers := containers{append(dep.Spec.Template.Spec.Containers, dep.Spec.Template.Spec.InitContainers...)}
+	depContainers := containers{
+		append(dep.Spec.Template.Spec.Containers, dep.Spec.Template.Spec.InitContainers...),
+	}
 
 	images := &Image{
 		Kind:  KindStatefulSet,
@@ -117,7 +124,9 @@ func (dep *DaemonSets) Get(dataMap string) (*Image, error) {
 		return nil, err
 	}
 
-	depContainers := containers{append(dep.Spec.Template.Spec.Containers, dep.Spec.Template.Spec.InitContainers...)}
+	depContainers := containers{
+		append(dep.Spec.Template.Spec.Containers, dep.Spec.Template.Spec.InitContainers...),
+	}
 
 	images := &Image{
 		Kind:  KindDaemonSet,
@@ -150,7 +159,9 @@ func (dep *Job) Get(dataMap string) (*Image, error) {
 		return nil, err
 	}
 
-	depContainers := containers{append(dep.Spec.Template.Spec.Containers, dep.Spec.Template.Spec.InitContainers...)}
+	depContainers := containers{
+		append(dep.Spec.Template.Spec.Containers, dep.Spec.Template.Spec.InitContainers...),
+	}
 
 	images := &Image{
 		Kind:  KindJob,
@@ -166,7 +177,9 @@ func (dep *ReplicaSets) Get(dataMap string) (*Image, error) {
 		return nil, err
 	}
 
-	depContainers := containers{append(dep.Spec.Template.Spec.Containers, dep.Spec.Template.Spec.InitContainers...)}
+	depContainers := containers{
+		append(dep.Spec.Template.Spec.Containers, dep.Spec.Template.Spec.InitContainers...),
+	}
 
 	images := &Image{
 		Kind:  KindReplicaSet,
@@ -199,7 +212,7 @@ func (dep *AlertManager) Get(dataMap string) (*Image, error) {
 	}
 
 	images := &Image{
-		Kind:  monitoringV1.AlertmanagersKind,
+		Kind:  monitoringv1.AlertmanagersKind,
 		Name:  dep.Name,
 		Image: []string{*dep.Spec.Image},
 	}
@@ -220,7 +233,7 @@ func (dep *Prometheus) Get(dataMap string) (*Image, error) {
 	imageNames = append(imageNames, *dep.Spec.Image)
 
 	images := &Image{
-		Kind:  monitoringV1.PrometheusesKind,
+		Kind:  monitoringv1.PrometheusesKind,
 		Name:  dep.Name,
 		Image: imageNames,
 	}
@@ -241,7 +254,7 @@ func (dep *ThanosRuler) Get(dataMap string) (*Image, error) {
 	imageNames = append(imageNames, dep.Spec.Image)
 
 	images := &Image{
-		Kind:  monitoringV1.ThanosRulerKind,
+		Kind:  monitoringv1.ThanosRulerKind,
 		Name:  dep.Name,
 		Image: imageNames,
 	}
@@ -256,12 +269,17 @@ func (dep *Grafana) Get(dataMap string) (*Image, error) {
 
 	if dep.APIVersion == "integreatly.org/v1alpha1" {
 		return nil, &imgErrors.GrafanaAPIVersionSupportError{
-			Message: fmt.Sprintf("plugin supports the latest api version and '%s' is not supported", dep.APIVersion),
+			Message: fmt.Sprintf(
+				"plugin supports the latest api version and '%s' is not supported",
+				dep.APIVersion,
+			),
 		}
 	}
 
 	grafanaDeployment := dep.Spec.Deployment.Spec.Template.Spec
-	depContainers := containers{append(grafanaDeployment.Containers, grafanaDeployment.InitContainers...)}
+	depContainers := containers{
+		append(grafanaDeployment.Containers, grafanaDeployment.InitContainers...),
+	}
 
 	images := &Image{
 		Kind:  KindGrafana,
@@ -277,10 +295,23 @@ func (dep *Thanos) Get(dataMap string) (*Image, error) {
 		return nil, err
 	}
 
-	thanosContainers := append(dep.Spec.Rule.StatefulsetOverrides.Spec.Template.Spec.Containers, dep.Spec.Rule.StatefulsetOverrides.Spec.Template.Spec.InitContainers...)
-	thanosContainers = append(dep.Spec.Query.DeploymentOverrides.Spec.Template.Spec.Containers, dep.Spec.Query.DeploymentOverrides.Spec.Template.Spec.InitContainers...)
-	thanosContainers = append(dep.Spec.StoreGateway.DeploymentOverrides.Spec.Template.Spec.Containers, dep.Spec.StoreGateway.DeploymentOverrides.Spec.Template.Spec.InitContainers...)
-	thanosContainers = append(dep.Spec.QueryFrontend.DeploymentOverrides.Spec.Template.Spec.Containers, dep.Spec.QueryFrontend.DeploymentOverrides.Spec.Template.Spec.InitContainers...)
+	var thanosContainers []corev1.Container
+	thanosContainers = append(thanosContainers,
+		dep.Spec.Rule.StatefulsetOverrides.Spec.Template.Spec.Containers...)
+	thanosContainers = append(thanosContainers,
+		dep.Spec.Rule.StatefulsetOverrides.Spec.Template.Spec.InitContainers...)
+	thanosContainers = append(thanosContainers,
+		dep.Spec.Query.DeploymentOverrides.Spec.Template.Spec.Containers...)
+	thanosContainers = append(thanosContainers,
+		dep.Spec.Query.DeploymentOverrides.Spec.Template.Spec.InitContainers...)
+	thanosContainers = append(thanosContainers,
+		dep.Spec.StoreGateway.DeploymentOverrides.Spec.Template.Spec.Containers...)
+	thanosContainers = append(thanosContainers,
+		dep.Spec.StoreGateway.DeploymentOverrides.Spec.Template.Spec.InitContainers...)
+	thanosContainers = append(thanosContainers,
+		dep.Spec.QueryFrontend.DeploymentOverrides.Spec.Template.Spec.Containers...)
+	thanosContainers = append(thanosContainers,
+		dep.Spec.QueryFrontend.DeploymentOverrides.Spec.Template.Spec.InitContainers...)
 
 	depContainers := containers{thanosContainers}
 
@@ -298,13 +329,16 @@ func (dep *ThanosReceiver) Get(dataMap string) (*Image, error) {
 		return nil, err
 	}
 
-	var receiverGroupTotalContainers []coreV1.Container
-	for _, receiverGroup := range dep.Spec.ReceiverGroups {
-		receiverGroupContainers := append(receiverGroup.StatefulSetOverrides.Spec.Template.Spec.Containers, receiverGroup.StatefulSetOverrides.Spec.Template.Spec.InitContainers...)
-		receiverGroupTotalContainers = append(receiverGroupTotalContainers, receiverGroupContainers...)
+	var receiverGroupContainers []corev1.Container
+	for idx := range dep.Spec.ReceiverGroups {
+		receiverGroup := dep.Spec.ReceiverGroups[idx]
+		receiverGroupContainers = append(receiverGroupContainers,
+			receiverGroup.StatefulSetOverrides.Spec.Template.Spec.Containers...)
+		receiverGroupContainers = append(receiverGroupContainers,
+			receiverGroup.StatefulSetOverrides.Spec.Template.Spec.InitContainers...)
 	}
 
-	depContainers := containers{receiverGroupTotalContainers}
+	depContainers := containers{receiverGroupContainers}
 
 	images := &Image{
 		Kind:  KindThanosReceiver,
@@ -375,16 +409,16 @@ func SupportedKinds() []string {
 	kinds := []string{
 		KindDeployment, KindStatefulSet, KindDaemonSet,
 		KindCronJob, KindJob, KindReplicaSet, KindPod,
-		monitoringV1.AlertmanagersKind, monitoringV1.PrometheusesKind, monitoringV1.ThanosRulerKind,
+		monitoringv1.AlertmanagersKind, monitoringv1.PrometheusesKind, monitoringv1.ThanosRulerKind,
 		KindGrafana, KindThanos, KindThanosReceiver,
 	}
 	return kinds
 }
 
 func (cont containers) getImages() []string {
-	images := make([]string, 0)
-	for _, container := range cont.containers {
-		images = append(images, container.Image)
+	images := make([]string, 0, len(cont.containers))
+	for idx := range cont.containers {
+		images = append(images, cont.containers[idx].Image)
 	}
 
 	return images

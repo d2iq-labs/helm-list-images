@@ -13,7 +13,7 @@ list-images get CHART|RELEASE [flags]
 ### Examples
 
 ```
-  helm list-images get prometheus-standalone path/to/chart/prometheus-standalone -f ~/path/to/override-config.yaml
+  helm list-images get path/to/chart/prometheus-standalone -f ~/path/to/override-config.yaml
   helm list-images get prometheus-standalone --from-release --registry quay.io
   helm list-images get prometheus-standalone --from-release --registry quay.io --unique
   helm list-images get prometheus-standalone --from-release --registry quay.io --yaml

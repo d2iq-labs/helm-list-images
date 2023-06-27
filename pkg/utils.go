@@ -23,11 +23,11 @@ func (v *ValueFiles) Valid() error {
 		}
 	}
 
-	if len(errStr) == 0 {
+	if errStr == "" {
 		return nil
 	}
 
-	//nolint:goerr113
+	//nolint:goerr113 // Just a dynamic error here.
 	return fmt.Errorf("%s", errStr)
 }
 

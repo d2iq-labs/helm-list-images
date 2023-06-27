@@ -4,9 +4,10 @@ import (
 	"bytes"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+
 	"github.com/d2iq-labs/helm-list-images/pkg"
 	"github.com/d2iq-labs/helm-list-images/pkg/k8s"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestImages_toYAML(t *testing.T) {

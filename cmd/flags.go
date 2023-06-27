@@ -1,9 +1,10 @@
 package cmd
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/d2iq-labs/helm-list-images/pkg"
 	"github.com/d2iq-labs/helm-list-images/pkg/k8s"
-	"github.com/spf13/cobra"
 )
 
 // Registers all global flags to utility itself.
@@ -13,7 +14,9 @@ func registerFlags(cmd *cobra.Command) {
 	cmd.PersistentFlags().StringArrayVar(&images.StringValues, "set-string", []string{},
 		"set STRING values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2)")
 	cmd.PersistentFlags().StringArrayVar(&images.FileValues, "set-file", []string{},
-		"set values from respective files specified via the command line (can specify multiple or separate values with commas: key1=path1,key2=path2)") //nolint:lll
+		"set values from respective files specified via the command line (can specify multiple or separate values with "+
+			"commas: key1=path1,key2=path2)")
+
 	cmd.PersistentFlags().VarP(&images.ValueFiles, "values", "f",
 		"specify values in a YAML file (can specify multiple)")
 }

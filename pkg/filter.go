@@ -35,8 +35,12 @@ func (image *Images) FilterImagesByRegistries(images []*k8s.Image) []*k8s.Image 
 			imagesToFilter = imagesFiltered
 		}
 
-		image.log.Debug(fmt.Sprintf("filtering images by the selected registries '%s' since '-r,--registry' is enabled",
-			strings.Join(image.Registries, ", ")))
+		image.log.Debug(
+			fmt.Sprintf(
+				"filtering images by the selected registries '%s' since '-r,--registry' is enabled",
+				strings.Join(image.Registries, ", "),
+			),
+		)
 
 		for _, img := range imagesToFilter {
 			uniqueImages := FilteredImages(img.Image, image.Registries)
@@ -52,7 +56,7 @@ func (image *Images) FilterImagesByRegistries(images []*k8s.Image) []*k8s.Image 
 	return imagesFiltered
 }
 
-func FilteredImages(images []string, registries []string) []string {
+func FilteredImages(images, registries []string) []string {
 	var imagesFiltered []string
 
 	for _, registry := range registries {

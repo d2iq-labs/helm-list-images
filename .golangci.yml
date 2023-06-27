@@ -1,73 +1,84 @@
----
+# Copyright 2021-2023 D2iQ, Inc. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
+run:
+  timeout: 10m
+
 linters:
-  disable-all: false
-  enable-all: true
-  disable:
-    - gochecknoglobals
-    - tagliatelle
-    - exhaustivestruct
-    - exhaustruct
-    - forbidigo
-    - paralleltest
-    - cyclop
-    - ireturn
-    - wrapcheck
-    - forcetypeassert
-    - maligned
-
-issues:
-  exclude-rules:
-    - path: _test\.go
-      linters:
-        - gomnd
-
-    # https://github.com/go-critic/go-critic/issues/926
-    - linters:
-        - gocritic
-      text: "unnecessaryDefer:"
+  disable-all: true
+  enable:
+    - containedctx
+    - contextcheck
+    - depguard
+    - errcheck
+    - errchkjson
+    - errname
+    - gochecknoinits
+    - gci
+    - goconst
+    - gocritic
+    - gocyclo
+    - godot
+    - gofumpt
+    - gosec
+    - gosimple
+    - govet
+    - ineffassign
+    - lll
+    - misspell
+    - nolintlint
+    - prealloc
+    - staticcheck
+    - stylecheck
+    - tenv
+    - thelper
+    - tparallel
+    - typecheck
+    - unconvert
+    - unparam
+    - unused
+    - whitespace
 
 linters-settings:
-  funlen:
-    lines: 160
-    statements: 60
-  cyclop:
-    max-complexity: 30
-
-
-  lll:
-    line-length: 140
-
-  dupl:
-    threshold: 450
-
   depguard:
     rules:
       main:
-        files:
-          - $all
-        allow:
-          - $gostd
+        deny:
+          - pkg: k8s.io/kubernetes
+            desc: "do not use k8s.io/kubernetes directly"
+  errcheck:
+    exclude-functions:
+      - encoding/json.Marshal
+      - encoding/json.MarshalIndent
+  errchkjson:
+    check-error-free-encoding: true
+  gci:
+    sections:
+      - Standard
+      - Default
+      - Prefix(github.com/d2iq-labs)
+      - Prefix(github.com/d2iq-labs/helm-image-list)
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - experimental
+      - opinionated
+      - performance
+      - style
+  gofumpt:
+    lang-version: "1.17"
+    extra-rules: true
+  lll:
+    line-length: 120
 
-
-run:
-  concurrency: 10
-  timeout: 10m
-  issues-exit-code: 1
-  tests: true
-  skip-dirs:
-    - scripts/
-    - vendor/
-    - docs/
-
-  skip-files:
-    - Makefile
-    - README.md
-    - Dockerfile
-
-severity:
-  default-severity: error
-
-service:
-  golangci-lint-version: 1.27.x
-  prepare:
-    - make local.check
+issues:
+  exclude-rules:
+    # ignore errcheck for code under a /test folder
+    - path: "test/*"
+      linters:
+        - errcheck
+    # ignore errcheck for flags.Parse (it is expected that we flag.ExitOnError)
+    # ignore response.WriteError as it always returns the err it was passed
+    - source: "flags.Parse|response.WriteError"
+      linters:
+        - errcheck

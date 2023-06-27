@@ -12,8 +12,6 @@ import (
 	"strconv"
 	"strings"
 
-	imgErrors "github.com/d2iq-labs/helm-list-images/pkg/errors"
-	"github.com/d2iq-labs/helm-list-images/pkg/k8s"
 	"github.com/otiai10/copy"
 	monitoringV1 "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"github.com/sirupsen/logrus"
@@ -25,6 +23,9 @@ import (
 	"helm.sh/helm/v3/pkg/cli/values"
 	"helm.sh/helm/v3/pkg/getter"
 	"helm.sh/helm/v3/pkg/postrender"
+
+	imgErrors "github.com/d2iq-labs/helm-list-images/pkg/errors"
+	"github.com/d2iq-labs/helm-list-images/pkg/k8s"
 )
 
 const (
@@ -85,10 +86,11 @@ func (image *Images) GetWriter() *bufio.Writer {
 // GetImages fetches all available images from the specified chart.
 // Also filters identified images, to get just unique ones.
 //
-//nolint:funlen,gocognit
+//nolint:gocyclo // Just a long function...
 func (image *Images) GetImages() error {
 	image.log.Debugf(
-		"got all required values to fetch the images from chart/release '%s' proceeding further to fetch the same", image.release,
+		"got all required values to fetch the images from chart/release '%s' proceeding further to fetch the same",
+		image.release,
 	)
 
 	chart, err := image.getChartManifests()
@@ -208,7 +210,10 @@ func (image *Images) GetImages() error {
 			grafanaErr := &imgErrors.GrafanaAPIVersionSupportError{}
 			if err != nil {
 				if errors.As(err, &grafanaErr) {
-					image.log.Debugf("fetching images from Kind Grafana errored with %s", err.Error())
+					image.log.Debugf(
+						"fetching images from Kind Grafana errored with %s",
+						err.Error(),
+					)
 
 					continue
 				} else {
@@ -227,12 +232,18 @@ func (image *Images) GetImages() error {
 
 func (image *Images) getChartManifests() ([]byte, error) {
 	if image.FromRelease {
-		image.log.Debugf("from-release is selected, hence fetching manifests for '%s' from helm release", image.release)
+		image.log.Debugf(
+			"from-release is selected, hence fetching manifests for '%s' from helm release",
+			image.release,
+		)
 
 		return image.GetImagesFromRelease()
 	}
 
-	image.log.Debugf("fetching manifests for '%s' by rendering helm template locally", image.release)
+	image.log.Debugf(
+		"fetching manifests for '%s' by rendering helm template locally",
+		image.release,
+	)
 
 	return image.getChartTemplate()
 }
@@ -245,7 +256,13 @@ func (image *Images) getChartTemplate() ([]byte, error) {
 
 	actionConfig := new(action.Configuration)
 
-	if err := actionConfig.Init(settings.RESTClientGetter(), settings.Namespace(), os.Getenv("HELM_DRIVER"), image.log.Debugf); err != nil {
+	err := actionConfig.Init(
+		settings.RESTClientGetter(),
+		settings.Namespace(),
+		os.Getenv("HELM_DRIVER"),
+		image.log.Debugf,
+	)
+	if err != nil {
 		image.log.Error("oops initialising helm client errored with", err)
 
 		return nil, err
@@ -293,7 +310,11 @@ func (image *Images) getChartTemplate() ([]byte, error) {
 		scanner := bufio.NewScanner(extraImagesFileReader)
 		for scanner.Scan() {
 			err = os.WriteFile(
-				filepath.Join(actualChartDir, "templates", fmt.Sprintf("helm-list-images-extra-images-file-%d-%d.yaml", fileIdx, resIdx)),
+				filepath.Join(
+					actualChartDir,
+					"templates",
+					fmt.Sprintf("helm-list-images-extra-images-file-%d-%d.yaml", fileIdx, resIdx),
+				),
 				[]byte(`---
 apiVersion: v1
 kind: Pod

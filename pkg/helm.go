@@ -13,11 +13,19 @@ import (
 func (image *Images) GetImagesFromRelease() ([]byte, error) {
 	settings := cli.New()
 
-	image.log.Debug(fmt.Sprintf("fetching chart manifest for release '%s' from kube cluster", image.release))
+	image.log.Debug(
+		fmt.Sprintf("fetching chart manifest for release '%s' from kube cluster", image.release),
+	)
 
 	actionConfig := new(action.Configuration)
 
-	if err := actionConfig.Init(settings.RESTClientGetter(), settings.Namespace(), os.Getenv("HELM_DRIVER"), log.Printf); err != nil {
+	err := actionConfig.Init(
+		settings.RESTClientGetter(),
+		settings.Namespace(),
+		os.Getenv("HELM_DRIVER"),
+		log.Printf,
+	)
+	if err != nil {
 		image.log.Error("oops initialising helm client errored with", err)
 
 		return nil, err
@@ -30,7 +38,12 @@ func (image *Images) GetImagesFromRelease() ([]byte, error) {
 		return nil, err
 	}
 
-	image.log.Debug(fmt.Sprintf("chart manifest for release '%s' was successfully retrieved from kube cluster", image.release))
+	image.log.Debug(
+		fmt.Sprintf(
+			"chart manifest for release '%s' was successfully retrieved from kube cluster",
+			image.release,
+		),
+	)
 
 	return []byte(release.Manifest), nil
 }
