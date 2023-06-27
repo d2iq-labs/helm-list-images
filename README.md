@@ -18,7 +18,7 @@ To make it simple, the helm plugin is leveraged. This can be installed as an add
 It helps in filtering images based on the Kubernetes type. It also helps in filtering images based on a registry which it is part of.
 
 ```shell
-helm list-images get ~/prometheus-setup/prometheus-standalone -f ~/prometheus-setup/prometheus-standalone/values-standalone-1.yaml
+helm list-images ~/prometheus-setup/prometheus-standalone -f ~/prometheus-setup/prometheus-standalone/values-standalone-1.yaml
 # executing above command would yield results something like below:
 quay.io/prometheus/node-exporter:v1.1.2
 k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.0.0
@@ -28,7 +28,7 @@ jimmidyson/configmap-reload:v0.5.0
 quay.io/prometheus/alertmanager:v0.21.0
 
 # using the same plugin can list images which are part of specified release
-helm list-images get prometheus-standalone --from-release --registry quay.io
+helm list-images prometheus-standalone --from-release --registry quay.io
 # above command should fetch all the images from a helm release 'prometheus-standalone' by limiting to registry 'quay.io', which results as below:
 quay.io/prometheus/alertmanager:v0.21.0
 quay.io/prometheus/alertmanager:v0.21.0
@@ -81,13 +81,13 @@ Use "list-images [command] --help" for more information about a command.
 Lists all images those are part of specified chart/release and matches the pattern or part of specified registry.
 
 Usage:
-  list-images get [RELEASE] [CHART] [flags]
+  list-images [RELEASE] [CHART] [flags]
 
 Examples:
-  helm list-images get prometheus-standalone path/to/chart/prometheus-standalone -f ~/path/to/override-config.yaml
-  helm list-images get prometheus-standalone --from-release --registry quay.io
-  helm list-images get prometheus-standalone --from-release --registry quay.io --unique
-  helm list-images get prometheus-standalone --from-release --registry quay.io --yaml
+  helm list-images prometheus-standalone path/to/chart/prometheus-standalone -f ~/path/to/override-config.yaml
+  helm list-images prometheus-standalone --from-release --registry quay.io
+  helm list-images prometheus-standalone --from-release --registry quay.io --unique
+  helm list-images prometheus-standalone --from-release --registry quay.io --yaml
 
 Flags:
       --from-release         enable the flag to fetch the images from release instead (disabled by default)

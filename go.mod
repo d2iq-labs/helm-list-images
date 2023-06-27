@@ -15,6 +15,7 @@ require (
 	github.com/thoas/go-funk v0.9.2
 	helm.sh/helm/v3 v3.12.1
 	k8s.io/api v0.27.2
+	k8s.io/component-base v0.27.2
 )
 
 require (
@@ -143,7 +144,6 @@ require (
 	k8s.io/apiserver v0.27.2 // indirect
 	k8s.io/cli-runtime v0.27.2 // indirect
 	k8s.io/client-go v0.27.2 // indirect
-	k8s.io/component-base v0.27.2 // indirect
 	k8s.io/klog/v2 v2.100.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20230515203736-54b630e78af5 // indirect
 	k8s.io/kubectl v0.27.2 // indirect

@@ -9,7 +9,7 @@ import (
 
 // Main will take the workload of executing/starting the cli, when the command is passed to it.
 func Main() {
-	cmd := SetListImagesCommands()
+	cmd := GetRootCommand()
 
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 

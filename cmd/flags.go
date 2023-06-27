@@ -2,47 +2,47 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
+	"k8s.io/component-base/version/verflag"
 
 	"github.com/d2iq-labs/helm-list-images/pkg"
 	"github.com/d2iq-labs/helm-list-images/pkg/k8s"
 )
 
 // Registers all global flags to utility itself.
-func registerFlags(cmd *cobra.Command) {
-	cmd.PersistentFlags().StringArrayVar(&images.Values, "set", []string{},
+func registerFlags(cmd *cobra.Command, images *pkg.Images) {
+	cmd.Flags().StringArrayVar(&images.Values, "set", []string{},
 		"set values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2)")
-	cmd.PersistentFlags().StringArrayVar(&images.StringValues, "set-string", []string{},
+	cmd.Flags().StringArrayVar(&images.StringValues, "set-string", []string{},
 		"set STRING values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2)")
-	cmd.PersistentFlags().StringArrayVar(&images.FileValues, "set-file", []string{},
+	cmd.Flags().StringArrayVar(&images.FileValues, "set-file", []string{},
 		"set values from respective files specified via the command line (can specify multiple or separate values with "+
 			"commas: key1=path1,key2=path2)")
 
-	cmd.PersistentFlags().VarP(&images.ValueFiles, "values", "f",
+	cmd.Flags().VarP(&images.ValueFiles, "values", "f",
 		"specify values in a YAML file (can specify multiple)")
-}
 
-// Registers all flags to command, get.
-func registerGetFlags(cmd *cobra.Command) {
-	cmd.PersistentFlags().StringSliceVarP(&images.Registries, "registry", "r", nil,
+	cmd.Flags().StringSliceVarP(&images.Registries, "registry", "r", nil,
 		"registry name (docker images belonging to this registry)")
-	cmd.PersistentFlags().StringSliceVarP(&images.Kind, "kind", "k", k8s.SupportedKinds(),
+	cmd.Flags().StringSliceVarP(&images.Kind, "kind", "k", k8s.SupportedKinds(),
 		"kubernetes app kind to fetch the images from")
-	cmd.PersistentFlags().StringVarP(&images.LogLevel, "log-level", "l", "info",
+	cmd.Flags().StringVarP(&images.LogLevel, "log-level", "l", "info",
 		"log level for the plugin helm list-images (defaults to info)")
-	cmd.PersistentFlags().StringVarP(&images.ImageRegex, "image-regex", "", pkg.ImageRegex,
+	cmd.Flags().StringVarP(&images.ImageRegex, "image-regex", "", pkg.ImageRegex,
 		"regex used to split helm template rendered")
-	cmd.PersistentFlags().BoolVarP(&images.UniqueImages, "unique", "u", false,
+	cmd.Flags().BoolVarP(&images.UniqueImages, "unique", "u", false,
 		"enable the flag if duplicates to be removed from the retrieved list (disabled by default also overrides --kind)")
-	cmd.PersistentFlags().BoolVarP(&images.JSON, "json", "j", false,
+	cmd.Flags().BoolVarP(&images.JSON, "json", "j", false,
 		"enable the flag to display images retrieved in json format (disabled by default)")
-	cmd.PersistentFlags().BoolVarP(&images.YAML, "yaml", "y", false,
+	cmd.Flags().BoolVarP(&images.YAML, "yaml", "y", false,
 		"enable the flag to display images retrieved in yaml format (disabled by default)")
-	cmd.PersistentFlags().BoolVarP(&images.Table, "table", "t", false,
+	cmd.Flags().BoolVarP(&images.Table, "table", "t", false,
 		"enable the flag to display images retrieved in table format (disabled by default)")
-	cmd.PersistentFlags().BoolVarP(&images.FromRelease, "from-release", "", false,
+	cmd.Flags().BoolVarP(&images.FromRelease, "from-release", "", false,
 		"enable the flag to fetch the images from release instead (disabled by default)")
-	cmd.PersistentFlags().StringArrayVar(&images.ExtraImagesFiles, "extra-images-file", []string{},
+	cmd.Flags().StringArrayVar(&images.ExtraImagesFiles, "extra-images-file", []string{},
 		"optional Helm template files to derive extra images from")
-	cmd.PersistentFlags().StringVar(&images.KubeVersion, "kube-version", "",
+	cmd.Flags().StringVar(&images.KubeVersion, "kube-version", "",
 		"Kubernetes version used for Capabilities.KubeVersion when rendering charts")
+
+	verflag.AddFlags(cmd.Flags())
 }
