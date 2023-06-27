@@ -37,26 +37,27 @@ const (
 // Images represents GetImages.
 type Images struct {
 	// Registries are list of registry names which we have filter out from
-	Registries       []string
-	Kind             []string
-	Values           []string
-	StringValues     []string
-	FileValues       []string
-	ExtraImagesFiles []string
-	ImageRegex       string
-	ValueFiles       ValueFiles
-	LogLevel         string
-	FromRelease      bool
-	UniqueImages     bool
-	KubeVersion      string
-	PostRenderer     postrender.PostRenderer
-	JSON             bool
-	YAML             bool
-	Table            bool
-	release          string
-	chart            string
-	log              *logrus.Logger
-	writer           *bufio.Writer
+	Registries             []string
+	Kind                   []string
+	Values                 []string
+	StringValues           []string
+	FileValues             []string
+	ExtraImagesFiles       []string
+	ImageRegex             string
+	ValueFiles             ValueFiles
+	LogLevel               string
+	FromRelease            bool
+	UniqueImages           bool
+	KubeVersion            string
+	ChartVersionConstraint string
+	PostRenderer           postrender.PostRenderer
+	JSON                   bool
+	YAML                   bool
+	Table                  bool
+	release                string
+	chart                  string
+	log                    *logrus.Logger
+	writer                 *bufio.Writer
 }
 
 func (image *Images) SetRelease(release string) {
@@ -290,6 +291,7 @@ func (image *Images) getChartTemplate() ([]byte, error) {
 		pull.Settings = settings
 		pull.Untar = true
 		pull.DestDir = tmpDir
+		pull.Version = image.ChartVersionConstraint
 
 		out, err := pull.Run(image.chart)
 		if err != nil {

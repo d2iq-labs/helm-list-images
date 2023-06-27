@@ -10,6 +10,8 @@ import (
 
 // Registers all global flags to utility itself.
 func registerFlags(cmd *cobra.Command, images *pkg.Images) {
+	verflag.AddFlags(cmd.Flags())
+
 	cmd.Flags().StringArrayVar(&images.Values, "set", []string{},
 		"set values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2)")
 	cmd.Flags().StringArrayVar(&images.StringValues, "set-string", []string{},
@@ -17,7 +19,6 @@ func registerFlags(cmd *cobra.Command, images *pkg.Images) {
 	cmd.Flags().StringArrayVar(&images.FileValues, "set-file", []string{},
 		"set values from respective files specified via the command line (can specify multiple or separate values with "+
 			"commas: key1=path1,key2=path2)")
-
 	cmd.Flags().VarP(&images.ValueFiles, "values", "f",
 		"specify values in a YAML file (can specify multiple)")
 
@@ -41,8 +42,12 @@ func registerFlags(cmd *cobra.Command, images *pkg.Images) {
 		"enable the flag to fetch the images from release instead (disabled by default)")
 	cmd.Flags().StringArrayVar(&images.ExtraImagesFiles, "extra-images-file", []string{},
 		"optional Helm template files to derive extra images from")
+	cmd.MarkFlagsMutuallyExclusive("from-release", "extra-images-file")
 	cmd.Flags().StringVar(&images.KubeVersion, "kube-version", "",
 		"Kubernetes version used for Capabilities.KubeVersion when rendering charts")
-
-	verflag.AddFlags(cmd.Flags())
+	cmd.Flags().StringVar(&images.ChartVersionConstraint, "chart-version", "",
+		"specify a version constraint for the chart version to use. This constraint can be a specific tag (e.g. 1.1.1) or "+
+			"it may reference a valid range (e.g. ^2.0.0). If this is not specified, the latest version is used",
+	)
+	cmd.MarkFlagsMutuallyExclusive("from-release", "chart-version")
 }

@@ -10,11 +10,14 @@ repos:
   - id: golangci-lint-mod
     stages: [commit]
     args: ["--fix"]
-- repo: https://github.com/dnephin/pre-commit-golang
-  rev: v0.5.1
+- repo: local
   hooks:
-  - id: go-generate
-    stages: [commit]
+  -   id: go-generate
+      name: go-generate
+      entry: make go-generate
+      language: system
+      types: [go]
+      pass_filenames: false
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v4.4.0
   hooks:
