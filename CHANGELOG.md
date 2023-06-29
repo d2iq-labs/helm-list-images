@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.6.1 (2023-06-29)
+
+<!-- Release notes generated using configuration in .github/release.yaml at main -->
+
+## What's Changed
+### Fixes 🔧
+* fix: Discard useless helm log output by @jimmidyson in https://github.com/d2iq-labs/helm-list-images/pull/16
+### Other Changes
+* ci: Update plugin.yaml with released version on release by @jimmidyson in https://github.com/d2iq-labs/helm-list-images/pull/17
+
+
+**Full Changelog**: https://github.com/d2iq-labs/helm-list-images/compare/v0.6.0...v0.6.1
+
 ## 0.6.0 (2023-06-27)
 
 <!-- Release notes generated using configuration in .github/release.yaml at main -->
