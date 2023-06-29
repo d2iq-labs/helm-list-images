@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"io"
+	"log"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -29,6 +31,7 @@ func GetRootCommand() *cobra.Command {
 				return err
 			}
 
+			log.SetOutput(io.Discard)
 			images.SetLogger(images.LogLevel)
 			images.SetWriter(os.Stdout)
 			cmd.SilenceUsage = true
@@ -53,6 +56,7 @@ func GetRootCommand() *cobra.Command {
 	registerFlags(rootCommand, &images)
 
 	rootCommand.SetUsageTemplate(getUsageTemplate())
+	rootCommand.DisableAutoGenTag = true
 
 	return rootCommand
 }

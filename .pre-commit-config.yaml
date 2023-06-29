@@ -45,6 +45,7 @@ repos:
     stages: [commit]
   - id: end-of-file-fixer
     stages: [commit]
+    exclude: ^docs/doc/
 - repo: https://github.com/jorisroovers/gitlint
   rev: v0.19.1
   hooks:
