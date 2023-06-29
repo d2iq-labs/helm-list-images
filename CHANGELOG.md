@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.6.2 (2023-06-29)
+
+<!-- Release notes generated using configuration in .github/release.yaml at main -->
+
+## What's Changed
+### Other Changes
+* ci: Use github.ref_name to get short tag name by @jimmidyson in https://github.com/d2iq-labs/helm-list-images/pull/18
+
+
+**Full Changelog**: https://github.com/d2iq-labs/helm-list-images/compare/v0.6.1...v0.6.2
+
 ## 0.6.1 (2023-06-29)
 
 <!-- Release notes generated using configuration in .github/release.yaml at main -->
