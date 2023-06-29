@@ -31,3 +31,23 @@ jobs:
         run: make release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update released plugin version in plugin.yaml
+        run: yq -i -y '.version |= ("${{ github.ref }}" | sub("^v";""))' plugin.yaml
+
+      # Use the REST API to update plugin.yaml, so we get automatic commit signing.
+      - name: Commit changes to plugin.yaml via REST API
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FILE_TO_COMMIT: plugin.yaml
+          DESTINATION_BRANCH: main
+        run: |
+          export MESSAGE="build: Update plugin.yaml to version ${{ github.ref }}"
+          export SHA="$( git rev-parse ${DESTINATION_BRANCH}:${FILE_TO_COMMIT} )""
+          export CONTENT="$( base64 -i ${FILE_TO_COMMIT} )"
+          gh api --method PUT /repos/:owner/:repo/contents/${FILE_TO_COMMIT} \
+            --field message="${MESSAGE}" \
+            --field content="${CONTENT}" \
+            --field encoding="base64" \
+            --field branch="${DESTINATION_BRANCH}" \
+            --field sha="${SHA}"
