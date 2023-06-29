@@ -33,7 +33,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Update released plugin version in plugin.yaml
-        run: yq -i -y '.version |= ("${{ github.ref_name }}" | sub("^v";""))' plugin.yaml
+        run: yq -i '.version |= ("${{ github.ref_name }}" | sub("^v";""))' plugin.yaml
 
       # Use the REST API to update plugin.yaml, so we get automatic commit signing.
       - name: Commit changes to plugin.yaml via REST API
