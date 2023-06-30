@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.7.0 (2023-06-30)
+
+<!-- Release notes generated using configuration in .github/release.yaml at main -->
+
+## What's Changed
+### Exciting New Features 🎉
+* feat: Handle chart tarballs by @jimmidyson in https://github.com/d2iq-labs/helm-list-images/pull/22
+### Other Changes
+* ci: Use correct yq flags on release by @jimmidyson in https://github.com/d2iq-labs/helm-list-images/pull/20
+
+
+**Full Changelog**: https://github.com/d2iq-labs/helm-list-images/compare/v0.6.2...v0.7.0
+
 ## 0.6.2 (2023-06-29)
 
 <!-- Release notes generated using configuration in .github/release.yaml at main -->
