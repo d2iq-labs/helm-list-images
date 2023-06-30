@@ -5,4 +5,4 @@ hooks:
   update: $HELM_PLUGIN_DIR/install-binary.sh
 name: list-images
 usage: Lists all/selected docker images that are part of deployment
-version: 0.6.2
+version: 0.7.0

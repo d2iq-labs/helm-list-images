@@ -43,7 +43,7 @@ jobs:
           DESTINATION_BRANCH: main
         run: |
           export MESSAGE="build: Update plugin.yaml to version ${{ github.ref_name }}"
-          export SHA="$( git rev-parse ${DESTINATION_BRANCH}:${FILE_TO_COMMIT} )""
+          export SHA="$( git rev-parse ${DESTINATION_BRANCH}:${FILE_TO_COMMIT} )"
           export CONTENT="$( base64 -i ${FILE_TO_COMMIT} )"
           gh api --method PUT /repos/:owner/:repo/contents/${FILE_TO_COMMIT} \
             --field message="${MESSAGE}" \
