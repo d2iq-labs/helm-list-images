@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.7.1 (2023-06-30)
+
+<!-- Release notes generated using configuration in .github/release.yaml at main -->
+
+## What's Changed
+### Other Changes
+* build: Use nix flakes for devenv by @jimmidyson in https://github.com/d2iq-labs/helm-list-images/pull/24
+
+
+**Full Changelog**: https://github.com/d2iq-labs/helm-list-images/compare/v0.7.0...v0.7.1
+
 ## 0.7.0 (2023-06-30)
 
 <!-- Release notes generated using configuration in .github/release.yaml at main -->
