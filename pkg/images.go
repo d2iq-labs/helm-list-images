@@ -3,6 +3,7 @@ package pkg
 import (
 	"bufio"
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
 	"io"
@@ -12,6 +13,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/mholt/archiver/v4"
 	"github.com/otiai10/copy"
 	monitoringV1 "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"github.com/sirupsen/logrus"
@@ -277,12 +279,62 @@ func (image *Images) getChartTemplate() ([]byte, error) {
 
 	actualChartDir := tmpDir
 
-	_, err = os.Stat(image.chart)
+	fi, err := os.Stat(image.chart)
 
 	switch {
 	case err == nil:
-		if err := copy.Copy(image.chart, actualChartDir); err != nil {
-			return nil, fmt.Errorf("failed to copy chart to temporary directory: %w", err)
+		if fi.IsDir() {
+			if err := copy.Copy(image.chart, actualChartDir); err != nil {
+				return nil, fmt.Errorf("failed to copy chart to temporary directory: %w", err)
+			}
+		} else {
+			format := archiver.CompressedArchive{
+				Compression: archiver.Gz{},
+				Archival:    archiver.Tar{},
+			}
+
+			chartYAMLPath := ""
+
+			r, err := os.Open(image.chart)
+			if err != nil {
+				return nil, fmt.Errorf("failed to open chart file for reading: %w", err)
+			}
+			defer r.Close()
+			err = format.Extract(context.Background(), r, nil, func(ctx context.Context, f archiver.File) error {
+				if f.IsDir() {
+					return nil
+				}
+
+				fp := filepath.Join(actualChartDir, f.NameInArchive)
+
+				if err := os.MkdirAll(filepath.Dir(fp), 0o755); err != nil {
+					return err
+				}
+
+				if filepath.Base(f.NameInArchive) == "Chart.yaml" &&
+					(chartYAMLPath == "" || len(f.NameInArchive) < len(chartYAMLPath)) {
+					chartYAMLPath = f.NameInArchive
+				}
+
+				r, err := f.Open()
+				if err != nil {
+					return err
+				}
+				defer r.Close()
+
+				w, err := os.Create(fp)
+				if err != nil {
+					return err
+				}
+				defer w.Close()
+
+				_, err = io.Copy(w, r)
+				return err
+			})
+			if err != nil {
+				return nil, fmt.Errorf("failed to extract chart tarball: %w", err)
+			}
+			actualChartDir = filepath.Join(actualChartDir, filepath.Dir(chartYAMLPath))
 		}
 	case filepath.IsAbs(image.chart):
 		return nil, fmt.Errorf("specified chart path does not exist: %w", err)
