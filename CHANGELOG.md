@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.10.0 (2023-07-03)
+
+<!-- Release notes generated using configuration in .github/release.yaml at main -->
+
+## What's Changed
+### Exciting New Features 🎉
+* feat: Enable unique filtering images by default by @jimmidyson in https://github.com/d2iq-labs/helm-list-images/pull/32
+* feat: Enable sorting images by default by @jimmidyson in https://github.com/d2iq-labs/helm-list-images/pull/34
+### Other Changes
+* ci: Checkout main properly when updating plugin.yaml by @jimmidyson in https://github.com/d2iq-labs/helm-list-images/pull/35
+
+
+**Full Changelog**: https://github.com/d2iq-labs/helm-list-images/compare/v0.9.0...v0.10.0
+
 ## 0.9.0 (2023-07-03)
 
 <!-- Release notes generated using configuration in .github/release.yaml at main -->
