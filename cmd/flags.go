@@ -40,8 +40,8 @@ func registerFlags(cmd *cobra.Command, images *pkg.Images) {
 		"log level for the plugin helm list-images (defaults to info)")
 	cmd.Flags().StringVarP(&images.ImageRegex, "image-regex", "", pkg.ImageRegex,
 		"regex used to split helm template rendered")
-	cmd.Flags().BoolVarP(&images.UniqueImages, "unique", "u", false,
-		"enable the flag if duplicates to be removed from the retrieved list (disabled by default also overrides --kind)")
+	cmd.Flags().BoolVarP(&images.UniqueImages, "unique", "u", true,
+		"enable the flag if duplicates to be removed from the retrieved list")
 	cmd.Flags().BoolVarP(&images.JSON, "json", "j", false,
 		"enable the flag to display images retrieved in json format (disabled by default)")
 	cmd.Flags().BoolVarP(&images.YAML, "yaml", "y", false,
