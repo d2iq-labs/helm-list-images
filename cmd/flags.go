@@ -50,4 +50,6 @@ func registerFlags(cmd *cobra.Command, images *pkg.Images) {
 			"it may reference a valid range (e.g. ^2.0.0). If this is not specified, the latest version is used",
 	)
 	cmd.MarkFlagsMutuallyExclusive("from-release", "chart-version")
+	cmd.Flags().
+		BoolVar(&images.IncludeTestImages, "include-test-images", false, "include images required for Helm tests")
 }

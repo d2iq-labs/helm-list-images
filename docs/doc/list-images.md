@@ -27,6 +27,7 @@ list-images CHART|RELEASE [flags]
       --from-release                    enable the flag to fetch the images from release instead (disabled by default)
   -h, --help                            help for list-images
       --image-regex string              regex used to split helm template rendered (default "---\\n# Source:\\s.*.")
+      --include-test-images             include images required for Helm tests
   -j, --json                            enable the flag to display images retrieved in json format (disabled by default)
   -k, --kind strings                    kubernetes app kind to fetch the images from (default [Deployment,StatefulSet,DaemonSet,CronJob,Job,ReplicaSet,Pod,Alertmanager,Prometheus,ThanosRuler,Grafana,Thanos,Receiver])
       --kube-version string             Kubernetes version used for Capabilities.KubeVersion when rendering charts (default "1.26.0")

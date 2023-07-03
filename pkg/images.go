@@ -25,6 +25,7 @@ import (
 	"helm.sh/helm/v3/pkg/cli/values"
 	"helm.sh/helm/v3/pkg/getter"
 	"helm.sh/helm/v3/pkg/postrender"
+	"helm.sh/helm/v3/pkg/release"
 
 	imgErrors "github.com/d2iq-labs/helm-list-images/pkg/errors"
 	"github.com/d2iq-labs/helm-list-images/pkg/k8s"
@@ -50,6 +51,7 @@ type Images struct {
 	LogLevel               string
 	FromRelease            bool
 	UniqueImages           bool
+	IncludeTestImages      bool
 	KubeVersion            string
 	ChartVersionConstraint string
 	PostRenderer           postrender.PostRenderer
@@ -62,8 +64,8 @@ type Images struct {
 	writer                 *bufio.Writer
 }
 
-func (image *Images) SetRelease(release string) {
-	image.release = release
+func (image *Images) SetRelease(rel string) {
+	image.release = rel
 }
 
 func (image *Images) SetChart(chart string) {
@@ -253,9 +255,7 @@ func (image *Images) getChartManifests() ([]byte, error) {
 
 func (image *Images) getChartTemplate() ([]byte, error) {
 	settings := cli.New()
-	if strings.ToLower(image.LogLevel) == logrus.DebugLevel.String() {
-		settings.Debug = true
-	}
+	settings.Debug = strings.ToLower(image.LogLevel) == logrus.DebugLevel.String()
 
 	actionConfig := new(action.Configuration)
 
@@ -267,7 +267,6 @@ func (image *Images) getChartTemplate() ([]byte, error) {
 	)
 	if err != nil {
 		image.log.Error("oops initialising helm client errored with", err)
-
 		return nil, err
 	}
 
@@ -423,9 +422,7 @@ spec:
 		templateClient.KubeVersion = parsedKubeVersion
 	}
 
-	p := getter.All(settings)
-
-	vals, err := valueOpts.MergeValues(p)
+	vals, err := valueOpts.MergeValues(getter.All(settings))
 	if err != nil {
 		return nil, fmt.Errorf("failed to merge values: %w", err)
 	}
@@ -440,12 +437,22 @@ spec:
 	fmt.Fprintln(&manifests, strings.TrimSpace(templateOutput.Manifest))
 
 	for _, h := range templateOutput.Hooks {
-		if h != nil {
-			fmt.Fprintf(&manifests, "---\n# Source: %s\n%s\n", h.Path, h.Manifest)
+		if !image.IncludeTestImages && isTestHook(h) {
+			continue
 		}
+		fmt.Fprintf(&manifests, "---\n# Source: %s\n%s\n", h.Path, h.Manifest)
 	}
 
 	return manifests.Bytes(), nil
+}
+
+func isTestHook(h *release.Hook) bool {
+	for _, e := range h.Events {
+		if e == release.HookTest {
+			return true
+		}
+	}
+	return false
 }
 
 func (image *Images) GetTemplates(template []byte) []string {
