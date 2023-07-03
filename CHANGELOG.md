@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.10.1 (2023-07-03)
+
+<!-- Release notes generated using configuration in .github/release.yaml at main -->
+
+## What's Changed
+### Fixes 🔧
+* fix: Check if image name is empty when parsing by @jimmidyson in https://github.com/d2iq-labs/helm-list-images/pull/36
+
+
+**Full Changelog**: https://github.com/d2iq-labs/helm-list-images/compare/v0.10.0...v0.10.1
+
 ## 0.10.0 (2023-07-03)
 
 <!-- Release notes generated using configuration in .github/release.yaml at main -->
