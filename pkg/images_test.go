@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"github.com/d2iq-labs/helm-list-images/pkg"
 	"github.com/d2iq-labs/helm-list-images/pkg/k8s"
@@ -118,14 +119,21 @@ func Test_getImagesFromKind(t *testing.T) {
 				Name:  "prometheus-standalone-kube-state-metrics",
 				Image: []string{"k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.0.0"},
 			},
+			{
+				Kind:  "Job",
+				Name:  "image-without-tag",
+				Image: []string{"docker.io/traefik"},
+			},
 		}
 
 		expected := []string{
 			"quay.io/prometheus/node-exporter:v1.1.2",
-			"jimmidyson/configmap-reload:v0.5.0",
+			"docker.io/jimmidyson/configmap-reload:v0.5.0",
 			"k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.0.0",
+			"docker.io/library/traefik:latest",
 		}
-		images := pkg.GetImagesFromKind(kindObj)
+		images, err := pkg.GetImagesFromKind(kindObj)
+		require.NoError(t, err)
 		assert.ElementsMatch(t, expected, images)
 	})
 }
