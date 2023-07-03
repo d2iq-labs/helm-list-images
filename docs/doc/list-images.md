@@ -39,7 +39,7 @@ list-images CHART|RELEASE [flags]
       --set-literal stringArray         set a literal STRING value on the command line
       --set-string stringArray          set STRING values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2)
   -t, --table                           enable the flag to display images retrieved in table format (disabled by default)
-  -u, --unique                          enable the flag if duplicates to be removed from the retrieved list (disabled by default also overrides --kind)
+  -u, --unique                          enable the flag if duplicates to be removed from the retrieved list (default true)
   -f, --values ValueFiles               specify values in a YAML file (can specify multiple) (default [])
       --version version[=true]          Print version information and quit
   -y, --yaml                            enable the flag to display images retrieved in yaml format (disabled by default)
