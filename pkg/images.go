@@ -54,6 +54,7 @@ type Images struct {
 	LogLevel               string
 	FromRelease            bool
 	UniqueImages           bool
+	SortImages             bool
 	IncludeTestImages      bool
 	KubeVersion            string
 	ChartVersionConstraint string

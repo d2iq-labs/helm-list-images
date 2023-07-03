@@ -38,6 +38,7 @@ list-images CHART|RELEASE [flags]
       --set-json stringArray            set JSON values on the command line (can specify multiple or separate values with commas: key1=jsonval1,key2=jsonval2)
       --set-literal stringArray         set a literal STRING value on the command line
       --set-string stringArray          set STRING values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2)
+  -s, --sort                            enable the flag to sort images (default true)
   -t, --table                           enable the flag to display images retrieved in table format (disabled by default)
   -u, --unique                          enable the flag if duplicates to be removed from the retrieved list (default true)
   -f, --values ValueFiles               specify values in a YAML file (can specify multiple) (default [])
