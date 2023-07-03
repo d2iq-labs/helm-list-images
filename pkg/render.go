@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
+	"sort"
 	"strings"
 
 	"github.com/cheynewallace/tabby"
@@ -38,6 +39,10 @@ func (image *Images) render(images []*k8s.Image) error {
 
 	if image.UniqueImages {
 		imags = GetUniqEntries(imags)
+	}
+
+	if image.SortImages {
+		sort.Stable(sort.StringSlice(imags))
 	}
 
 	if _, err := fmt.Fprintf(image.writer, "%s\n", strings.Join(imags, "\n")); err != nil {
