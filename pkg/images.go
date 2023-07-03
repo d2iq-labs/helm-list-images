@@ -475,15 +475,18 @@ func GetImagesFromKind(kinds []*k8s.Image) ([]string, error) {
 	var images []string
 	for _, knd := range kinds {
 		for _, img := range knd.Image {
-			ref, err := name.ParseReference(img)
-			if err != nil {
-				return nil, err
+			img = strings.TrimSpace(img)
+			if img != "" {
+				ref, err := name.ParseReference(img)
+				if err != nil {
+					return nil, err
+				}
+				normalizedImg := ref.Name()
+				if strings.HasPrefix(normalizedImg, "index.docker.io/") {
+					normalizedImg = strings.TrimPrefix(normalizedImg, "index.")
+				}
+				images = append(images, normalizedImg)
 			}
-			normalizedImg := ref.Name()
-			if strings.HasPrefix(normalizedImg, "index.docker.io/") {
-				normalizedImg = strings.TrimPrefix(normalizedImg, "index.")
-			}
-			images = append(images, normalizedImg)
 		}
 	}
 
