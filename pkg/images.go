@@ -45,6 +45,7 @@ type Images struct {
 	Values                 []string
 	StringValues           []string
 	FileValues             []string
+	JSONValues             []string
 	ExtraImagesFiles       []string
 	ImageRegex             string
 	ValueFiles             ValueFiles
@@ -404,6 +405,7 @@ spec:
 		StringValues: image.StringValues,
 		Values:       image.Values,
 		FileValues:   image.FileValues,
+		JSONValues:   image.JSONValues,
 	}
 
 	templateClient := action.NewInstall(actionConfig)
