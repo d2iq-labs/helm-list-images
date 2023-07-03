@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.8.0 (2023-07-03)
+
+<!-- Release notes generated using configuration in .github/release.yaml at main -->
+
+## What's Changed
+### Exciting New Features 🎉
+* feat: Skip test images by default by @jimmidyson in https://github.com/d2iq-labs/helm-list-images/pull/25
+
+
+**Full Changelog**: https://github.com/d2iq-labs/helm-list-images/compare/v0.7.1...v0.8.0
+
 ## 0.7.1 (2023-06-30)
 
 <!-- Release notes generated using configuration in .github/release.yaml at main -->
