@@ -16,7 +16,6 @@ export GOARCH := $(shell go env GOARCH)
 endif
 
 export GOVERSION := $(shell go version | awk '{print $3;}')
-  $(info $(GOVERSION))
 
 define go_test
 	gotestsum \
