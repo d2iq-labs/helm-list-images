@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.9.0 (2023-07-03)
+
+<!-- Release notes generated using configuration in .github/release.yaml at main -->
+
+## What's Changed
+### Exciting New Features 🎉
+* feat: Add set-json and set-literal flags by @jimmidyson in https://github.com/d2iq-labs/helm-list-images/pull/29
+* feat: Output normalized image name by @jimmidyson in https://github.com/d2iq-labs/helm-list-images/pull/31
+### Other Changes
+* ci: Checkout main when updating plugin.yaml by @jimmidyson in https://github.com/d2iq-labs/helm-list-images/pull/27
+* build: Remove unnecessary go version output by @jimmidyson in https://github.com/d2iq-labs/helm-list-images/pull/30
+
+
+**Full Changelog**: https://github.com/d2iq-labs/helm-list-images/compare/v0.8.0...v0.9.0
+
 ## 0.8.0 (2023-07-03)
 
 <!-- Release notes generated using configuration in .github/release.yaml at main -->
