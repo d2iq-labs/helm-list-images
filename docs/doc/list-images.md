@@ -35,6 +35,7 @@ list-images CHART|RELEASE [flags]
   -r, --registry strings                registry name (docker images belonging to this registry)
       --set stringArray                 set values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2)
       --set-file stringArray            set values from respective files specified via the command line (can specify multiple or separate values with commas: key1=path1,key2=path2)
+      --set-json stringArray            set JSON values on the command line (can specify multiple or separate values with commas: key1=jsonval1,key2=jsonval2)
       --set-string stringArray          set STRING values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2)
   -t, --table                           enable the flag to display images retrieved in table format (disabled by default)
   -u, --unique                          enable the flag if duplicates to be removed from the retrieved list (disabled by default also overrides --kind)

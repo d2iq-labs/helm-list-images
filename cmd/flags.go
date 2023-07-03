@@ -21,6 +21,14 @@ func registerFlags(cmd *cobra.Command, images *pkg.Images) {
 			"commas: key1=path1,key2=path2)")
 	cmd.Flags().VarP(&images.ValueFiles, "values", "f",
 		"specify values in a YAML file (can specify multiple)")
+	cmd.Flags().
+		StringArrayVar(
+			&images.JSONValues,
+			"set-json",
+			[]string{},
+			`set JSON values on the command line (can specify multiple or separate values with commas: `+
+				`key1=jsonval1,key2=jsonval2)`,
+		)
 
 	cmd.Flags().StringSliceVarP(&images.Registries, "registry", "r", nil,
 		"registry name (docker images belonging to this registry)")
