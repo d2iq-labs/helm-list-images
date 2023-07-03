@@ -31,7 +31,10 @@ func (image *Images) render(images []*k8s.Image) error {
 
 	image.log.Debug("no format was specified for rendering images, defaulting to list")
 
-	imags := GetImagesFromKind(imagesFiltered)
+	imags, err := GetImagesFromKind(imagesFiltered)
+	if err != nil {
+		return err
+	}
 
 	if image.UniqueImages {
 		imags = GetUniqEntries(imags)

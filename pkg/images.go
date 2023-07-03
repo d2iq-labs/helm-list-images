@@ -13,6 +13,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/google/go-containerregistry/pkg/name"
 	"github.com/mholt/archiver/v4"
 	"github.com/otiai10/copy"
 	monitoringV1 "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
@@ -469,11 +470,21 @@ func (image *Images) GetTemplates(template []byte) []string {
 	return kinds
 }
 
-func GetImagesFromKind(kinds []*k8s.Image) []string {
+func GetImagesFromKind(kinds []*k8s.Image) ([]string, error) {
 	var images []string
 	for _, knd := range kinds {
-		images = append(images, knd.Image...)
+		for _, img := range knd.Image {
+			ref, err := name.ParseReference(img)
+			if err != nil {
+				return nil, err
+			}
+			normalizedImg := ref.Name()
+			if strings.HasPrefix(normalizedImg, "index.docker.io/") {
+				normalizedImg = strings.TrimPrefix(normalizedImg, "index.")
+			}
+			images = append(images, normalizedImg)
+		}
 	}
 
-	return images
+	return images, nil
 }
