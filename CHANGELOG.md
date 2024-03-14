@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.10.2 (2024-03-14)
+
+<!-- Release notes generated using configuration in .github/release.yaml at main -->
+
+## What's Changed
+### Fixes 🔧
+* fix: Properly quote extra images when parsing by @jimmidyson in https://github.com/d2iq-labs/helm-list-images/pull/38
+
+
+**Full Changelog**: https://github.com/d2iq-labs/helm-list-images/compare/v0.10.1...v0.10.2
+
 ## 0.10.1 (2023-07-03)
 
 <!-- Release notes generated using configuration in .github/release.yaml at main -->
