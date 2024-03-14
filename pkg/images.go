@@ -379,7 +379,7 @@ metadata:
   name: unused`+strconv.Itoa(fileIdx)+`
 spec:
   containers:
-  - image: `+scanner.Text()),
+  - image: "`+scanner.Text()+`"`),
 				0o400,
 			)
 
