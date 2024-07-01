@@ -1,12 +1,8 @@
 module github.com/d2iq-labs/helm-list-images
 
-go 1.22
-toolchain go1.22.4
+go 1.22.0
 
-replace (
-	github.com/docker/cli => github.com/docker/cli v20.10.25+incompatible
-	github.com/docker/docker => github.com/docker/docker v20.10.25+incompatible
-)
+toolchain go1.22.4
 
 require (
 	github.com/banzaicloud/thanos-operator/pkg/sdk v0.3.7
@@ -60,7 +56,6 @@ require (
 	github.com/docker/docker-credential-helpers v0.7.0 // indirect
 	github.com/docker/go-connections v0.5.0 // indirect
 	github.com/docker/go-metrics v0.0.1 // indirect
-	github.com/docker/go-units v0.5.0 // indirect
 	github.com/dsnet/compress v0.0.1 // indirect
 	github.com/emicklei/go-restful/v3 v3.11.0 // indirect
 	github.com/evanphx/json-patch v5.7.0+incompatible // indirect
@@ -117,7 +112,6 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/monochromegane/go-gitignore v0.0.0-20200626010858-205db1a8cc00 // indirect
-	github.com/morikuni/aec v1.0.0 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/mxk/go-flowrate v0.0.0-20140419014527-cca7078d478f // indirect
 	github.com/nwaples/rardecode/v2 v2.0.0-beta.2 // indirect
