@@ -23,6 +23,9 @@ templates-latest/
 # dropping all test results
 cover.out
 cover.html
+coverage.out
+junit-report.xml
+test.json
 
 # dropping all local builds generated for testing
 bin/
@@ -37,6 +40,5 @@ example/chart/grafana-operator
 example/chart/strimzi
 
 # Devenv
-.devenv*
-devenv.local.nix
+.devbox*
 .direnv
