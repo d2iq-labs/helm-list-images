@@ -14,7 +14,7 @@ require (
 	github.com/google/go-containerregistry v0.15.2
 	github.com/grafana-operator/grafana-operator v1.4.1-0.20230402103704-6c9d72512d5a
 	github.com/mholt/archiver/v4 v4.0.0-alpha.8
-	github.com/otiai10/copy v1.12.0
+	github.com/otiai10/copy v1.14.0
 	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.65.1
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/cobra v1.7.0
@@ -147,7 +147,7 @@ require (
 	golang.org/x/crypto v0.5.0 // indirect
 	golang.org/x/net v0.10.0 // indirect
 	golang.org/x/oauth2 v0.8.0 // indirect
-	golang.org/x/sync v0.1.0 // indirect
+	golang.org/x/sync v0.3.0 // indirect
 	golang.org/x/sys v0.8.0 // indirect
 	golang.org/x/term v0.8.0 // indirect
 	golang.org/x/text v0.9.0 // indirect
