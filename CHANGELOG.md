@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.10.3 (2024-07-01)
+
+<!-- Release notes generated using configuration in .github/release.yaml at main -->
+
+## What's Changed
+### Other Changes
+* build: Update tooling by @jimmidyson in https://github.com/d2iq-labs/helm-list-images/pull/40
+
+## New Contributors
+* @dependabot made their first contribution in https://github.com/d2iq-labs/helm-list-images/pull/45
+
+**Full Changelog**: https://github.com/d2iq-labs/helm-list-images/compare/v0.10.2...v0.10.3
+
 ## 0.10.2 (2024-03-14)
 
 <!-- Release notes generated using configuration in .github/release.yaml at main -->
