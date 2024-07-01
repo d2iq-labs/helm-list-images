@@ -17,7 +17,7 @@ require (
 	github.com/otiai10/copy v1.12.0
 	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.65.1
 	github.com/sirupsen/logrus v1.9.0
-	github.com/spf13/cobra v1.7.0
+	github.com/spf13/cobra v1.8.1
 	github.com/stretchr/testify v1.8.2
 	github.com/thoas/go-funk v0.9.2
 	helm.sh/helm/v3 v3.12.1
@@ -47,7 +47,7 @@ require (
 	github.com/chai2010/gettext-go v1.0.2 // indirect
 	github.com/connesc/cipherio v0.2.1 // indirect
 	github.com/containerd/containerd v1.7.0 // indirect
-	github.com/cpuguy83/go-md2man/v2 v2.0.2 // indirect
+	github.com/cpuguy83/go-md2man/v2 v2.0.4 // indirect
 	github.com/cyphar/filepath-securejoin v0.2.3 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/docker/cli v23.0.5+incompatible // indirect
