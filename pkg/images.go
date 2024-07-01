@@ -382,7 +382,6 @@ spec:
   - image: "`+scanner.Text()+`"`),
 				0o400,
 			)
-
 			if err != nil {
 				_ = extraImagesFileReader.Close()
 

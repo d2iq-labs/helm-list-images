@@ -22,13 +22,13 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
 
-      - name: Set up devenv.sh environment
-        uses: d2iq-labs/devenv.sh-action@v1
+      - name: Install devbox
+        uses: jetify-com/devbox-install-action@v0.11.0
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          enable-cache: true
 
       - name: Run unit tests
-        run: make test
+        run: devbox run -- make test
 
   lint:
     runs-on: ubuntu-22.04
@@ -36,37 +36,55 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
 
-      - name: Set up devenv.sh environment
-        uses: d2iq-labs/devenv.sh-action@v1
+      - name: Install devbox
+        uses: jetify-com/devbox-install-action@v0.11.0
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          enable-cache: true
 
       - name: Export golang and golangci-lint versions
+        id: versions
         run: |
-          echo "GOLANGCI_LINT_VERSION=v$(golangci-lint version --format short)" >>$GITHUB_ENV
-          echo "GO_VERSION=$(go version | grep -o "[[:digit:]]\+.[[:digit:]]\+\(.[[:digit:]]\+\)\?")" >>$GITHUB_ENV
+          echo "GOLANGCI_LINT_VERSION=v$(devbox run -- golangci-lint version --format short)" >>$GITHUB_OUTPUT
+          echo "GO_VERSION=$(devbox run -- go version | grep -o "[[:digit:]]\+.[[:digit:]]\+\(.[[:digit:]]\+\)\?")" >>$GITHUB_OUTPUT
 
       - name: golangci-lint
         uses: reviewdog/action-golangci-lint@v2
         with:
           fail_on_error: true
           reporter: github-pr-review
-          golangci_lint_version: ${{ env.GOLANGCI_LINT_VERSION }}
-          go_version: ${{ env.GO_VERSION }}
+          golangci_lint_version: ${{ steps.versions.outputs.GOLANGCI_LINT_VERSION }}
+          go_version: ${{ steps.versions.outputs.GO_VERSION }}
 
   pre-commit:
     runs-on: ubuntu-22.04
     steps:
       - name: Check out code
         uses: actions/checkout@v4
-
-      - name: Set up devenv.sh environment
-        uses: d2iq-labs/devenv.sh-action@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.event.pull_request.head.sha }}
 
-      - uses: pre-commit/action@v3.0.1
+      - name: Install devbox
+        uses: jetify-com/devbox-install-action@v0.11.0
         with:
-          extra_args: --all-files --show-diff-on-failure
+          enable-cache: true
+
+      - name: Go cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Set up pre-commit cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pre-commit
+          key: pre-commit-3|${{ hashFiles('.pre-commit-config.yaml') }}
+
+      - name: Run pre-commit
+        run: devbox run -- make pre-commit
         env:
-          SKIP: no-commit-to-branch,golangci-lint
+          SKIP: no-commit-to-branch,golangci-lint,actionlint-system

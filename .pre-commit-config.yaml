@@ -7,19 +7,16 @@ repos:
   hooks:
   - id: go-mod-tidy
     stages: [commit]
-  - id: golangci-lint-mod
-    stages: [commit]
-    args: ["--fix"]
 - repo: local
   hooks:
-  -   id: go-generate
-      name: go-generate
-      entry: make go-generate
-      language: system
-      types: [go]
-      pass_filenames: false
+  - id: golangci-lint
+    name: golangci-lint
+    entry: make go-generate lint
+    language: system
+    files: "(.*\\.go|go.mod|go.sum|go.mk)$"
+    pass_filenames: false
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.4.0
+  rev: v4.6.0
   hooks:
   - id: trailing-whitespace
     stages: [commit]
@@ -60,7 +57,7 @@ repos:
   - id: script-must-have-extension
     stages: [commit]
 - repo: https://github.com/shellcheck-py/shellcheck-py
-  rev: v0.9.0.5
+  rev: v0.10.0.1
   hooks:
   - id: shellcheck
     stages: [commit]

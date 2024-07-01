@@ -26,7 +26,6 @@ builds:
 
 archives:
   - format: tar.gz
-    rlcp: true
     name_template: >-
       {{ .ProjectName }}_
       {{- .Version }}_

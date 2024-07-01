@@ -22,13 +22,13 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
 
-      - name: Set up devenv.sh environment
-        uses: d2iq-labs/devenv.sh-action@v1
+      - name: Install devbox
+        uses: jetify-com/devbox-install-action@v0.11.0
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          enable-cache: true
 
       - name: Build
-        run: make build-snapshot
+        run: devbox run -- make build-snapshot
 
       - name: Run binary
         run: |

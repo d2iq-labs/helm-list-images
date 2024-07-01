@@ -22,13 +22,13 @@ jobs:
           ref: ${{ github.ref }}
           fetch-depth: 0
 
-      - name: Set up devenv.sh environment
-        uses: d2iq-labs/devenv.sh-action@v1
+      - name: Install devbox
+        uses: jetify-com/devbox-install-action@v0.11.0
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          enable-cache: true
 
       - name: Release
-        run: make release
+        run: devbox run -- make release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

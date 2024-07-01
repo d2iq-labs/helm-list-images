@@ -1,0 +1,15 @@
+{
+  "packages": [
+    "crane@latest",
+    "go@latest",
+    "kubernetes-helm@latest",
+    "golines@latest",
+    "gotestsum@latest",
+    "goreleaser@latest",
+    "pre-commit@latest",
+    "shfmt@latest",
+    "yq-go@latest",
+    "path:./hack/flakes#golangci-lint",
+    "path:./hack/flakes#go-mod-upgrade"
+  ]
+}
