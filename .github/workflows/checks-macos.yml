@@ -20,7 +20,7 @@ jobs:
     runs-on: macos-13
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up devenv.sh environment
         uses: d2iq-labs/devenv.sh-action@v1
