@@ -1,6 +1,8 @@
 module github.com/d2iq-labs/helm-list-images
 
-go 1.19
+go 1.22
+
+toolchain go1.22.4
 
 replace (
 	github.com/docker/cli => github.com/docker/cli v20.10.25+incompatible
