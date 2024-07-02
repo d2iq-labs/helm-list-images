@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.11.0 (2024-07-02)
+
+<!-- Release notes generated using configuration in .github/release.yaml at main -->
+
+## What's Changed
+### Exciting New Features 🎉
+* feat: Support repo URL for helm chart by @jimmidyson in https://github.com/d2iq-labs/helm-list-images/pull/56
+
+
+**Full Changelog**: https://github.com/d2iq-labs/helm-list-images/compare/v0.10.3...v0.11.0
+
 ## 0.10.3 (2024-07-01)
 
 <!-- Release notes generated using configuration in .github/release.yaml at main -->
