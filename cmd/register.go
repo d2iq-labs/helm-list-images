@@ -21,6 +21,7 @@ func GetRootCommand() *cobra.Command {
 		Long: "Lists all images those are part of specified chart/release and matches the pattern or part of specified " +
 			"registry.",
 		Example: `  helm list-images path/to/chart/prometheus-standalone -f ~/path/to/override-config.yaml
+  helm list-images prometheus --repository-url https://prometheus-community.github.io/helm-charts
   helm list-images prometheus-standalone --from-release --registry quay.io
   helm list-images prometheus-standalone --from-release --registry quay.io --unique
   helm list-images prometheus-standalone --from-release --registry quay.io --yaml`,

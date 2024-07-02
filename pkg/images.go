@@ -59,6 +59,7 @@ type Images struct {
 	KubeVersion            string
 	ChartVersionConstraint string
 	PostRenderer           postrender.PostRenderer
+	RepoURL                string
 	JSON                   bool
 	YAML                   bool
 	Table                  bool
@@ -347,6 +348,7 @@ func (image *Images) getChartTemplate() ([]byte, error) {
 		pull.Untar = true
 		pull.DestDir = tmpDir
 		pull.Version = image.ChartVersionConstraint
+		pull.RepoURL = image.RepoURL
 
 		out, err := pull.Run(image.chart)
 		if err != nil {

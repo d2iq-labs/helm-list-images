@@ -125,7 +125,7 @@ lint.%: ; $(info $(M) linting $* module)
 	$(if $(filter-out root,$*),cd $* && )golines -w $$(go list ./... | sed "s|^$$(go list -m)|.|")
 	$(if $(filter-out root,$*),cd $* && )golangci-lint run --fix --config=$(GOLANGCI_CONFIG_FILE)
 	$(if $(filter-out root,$*),cd $* && )golines -w $$(go list ./... | sed "s|^$$(go list -m)|.|")
-	$(if $(filter-out root,$*),cd $* && )go fix ./...
+#$(if $(filter-out root,$*),cd $* && )go fix ./...
 
 .PHONY: mod-tidy
 mod-tidy: ## Run go mod tidy for all modules
@@ -160,7 +160,7 @@ go-clean.%: ; $(info $(M) running go clean for $* module)
 go-generate: ## Runs go generate
 go-generate: ; $(info $(M) running go generate)
 	go generate -x ./...
-	go fix ./...
+# go fix ./...
 
 .PHONY: go-mod-upgrade
 go-mod-upgrade: ## Interactive check for direct module dependency upgrades

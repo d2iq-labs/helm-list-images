@@ -55,13 +55,17 @@ func registerFlags(cmd *cobra.Command, images *pkg.Images) {
 	cmd.Flags().StringArrayVar(&images.ExtraImagesFiles, "extra-images-file", []string{},
 		"optional Helm template files to derive extra images from")
 	cmd.MarkFlagsMutuallyExclusive("from-release", "extra-images-file")
-	cmd.Flags().StringVar(&images.KubeVersion, "kube-version", "1.26.0",
+	cmd.Flags().StringVar(&images.KubeVersion, "kube-version", "1.29.0",
 		"Kubernetes version used for Capabilities.KubeVersion when rendering charts")
 	cmd.Flags().StringVar(&images.ChartVersionConstraint, "chart-version", "",
 		"specify a version constraint for the chart version to use. This constraint can be a specific tag (e.g. 1.1.1) or "+
 			"it may reference a valid range (e.g. ^2.0.0). If this is not specified, the latest version is used",
 	)
+	cmd.Flags().StringVar(&images.RepoURL, "repo", "",
+		"chart repository url where to locate the requested chart",
+	)
 	cmd.MarkFlagsMutuallyExclusive("from-release", "chart-version")
+	cmd.MarkFlagsMutuallyExclusive("from-release", "repo")
 	cmd.Flags().
 		BoolVar(&images.IncludeTestImages, "include-test-images", false, "include images required for Helm tests")
 }
