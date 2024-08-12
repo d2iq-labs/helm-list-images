@@ -8,7 +8,7 @@ require (
 	github.com/banzaicloud/thanos-operator/pkg/sdk v0.3.7
 	github.com/cheynewallace/tabby v1.1.1
 	github.com/ghodss/yaml v1.0.0
-	github.com/google/go-containerregistry v0.20.1
+	github.com/google/go-containerregistry v0.20.2
 	github.com/grafana-operator/grafana-operator v1.4.1-0.20230402103704-6c9d72512d5a
 	github.com/mholt/archiver/v4 v4.0.0-alpha.8
 	github.com/otiai10/copy v1.14.0
@@ -50,7 +50,7 @@ require (
 	github.com/cyphar/filepath-securejoin v0.2.4 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/distribution/reference v0.5.0 // indirect
-	github.com/docker/cli v25.0.1+incompatible // indirect
+	github.com/docker/cli v27.1.1+incompatible // indirect
 	github.com/docker/distribution v2.8.3+incompatible // indirect
 	github.com/docker/docker v25.0.6+incompatible // indirect
 	github.com/docker/docker-credential-helpers v0.7.0 // indirect
