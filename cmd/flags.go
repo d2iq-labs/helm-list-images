@@ -57,6 +57,8 @@ func registerFlags(cmd *cobra.Command, images *pkg.Images) {
 	cmd.MarkFlagsMutuallyExclusive("from-release", "extra-images-file")
 	cmd.Flags().StringVar(&images.KubeVersion, "kube-version", "1.29.0",
 		"Kubernetes version used for Capabilities.KubeVersion when rendering charts")
+	cmd.Flags().StringArrayVar(&images.APIVersions, "api-versions", []string{},
+		"Kubernetes api versions used for Capabilities.APIVersions when rendering charts")
 	cmd.Flags().StringVar(&images.ChartVersionConstraint, "chart-version", "",
 		"specify a version constraint for the chart version to use. This constraint can be a specific tag (e.g. 1.1.1) or "+
 			"it may reference a valid range (e.g. ^2.0.0). If this is not specified, the latest version is used",
