@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.12.0 (2024-10-13)
+
+<!-- Release notes generated using configuration in .github/release.yaml at main -->
+
+## What's Changed
+### Exciting New Features 🎉
+* feat: expose Helm --api-versions by @dkoshkin in https://github.com/d2iq-labs/helm-list-images/pull/69
+
+## New Contributors
+* @dkoshkin made their first contribution in https://github.com/d2iq-labs/helm-list-images/pull/69
+
+**Full Changelog**: https://github.com/d2iq-labs/helm-list-images/compare/v0.11.0...v0.12.0
+
 ## 0.11.0 (2024-07-02)
 
 <!-- Release notes generated using configuration in .github/release.yaml at main -->
