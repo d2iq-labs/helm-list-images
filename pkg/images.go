@@ -57,6 +57,7 @@ type Images struct {
 	SortImages             bool
 	IncludeTestImages      bool
 	KubeVersion            string
+	APIVersions            []string
 	ChartVersionConstraint string
 	PostRenderer           postrender.PostRenderer
 	RepoURL                string
@@ -428,6 +429,8 @@ spec:
 
 		templateClient.KubeVersion = parsedKubeVersion
 	}
+
+	templateClient.APIVersions = image.APIVersions
 
 	vals, err := valueOpts.MergeValues(getter.All(settings))
 	if err != nil {
