@@ -1,6 +1,7 @@
 module github.com/d2iq-labs/helm-list-images
 
-go 1.22.0
+go 1.23
+
 toolchain go1.23.3
 
 require (
